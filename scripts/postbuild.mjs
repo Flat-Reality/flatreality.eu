@@ -9,6 +9,7 @@ const routes = [
   'partners',
   'partners/outsourcing',
   'partners/outsourcing/game-vision-pack',
+  'partners/outsourcing/retainer',
   'partners/outsourcing/retainerplus',
   'partners/tech',
   'partners/tech/phantomui'
