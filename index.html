@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050505" />
     <meta name="description" content="Flat Reality is an independent European game studio creating expressive games that leave a lasting impression." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta property="og:title" content="Flat Reality - Games Should Say Something" />
     <meta property="og:description" content="Independent, expressive games that leave a lasting impression." />
     <meta property="og:type" content="website" />
@@ -12,11 +13,24 @@
     <meta property="og:image" content="https://flatreality.eu/assets/images/MAD_GAMES_SHOW-SABADO-TARDE-2539-scaled.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="canonical" href="https://flatreality.eu/" />
+    <link rel="preload" as="image" href="/assets/logos/LogoBlackTransparent.png" />
     <link rel="icon" type="image/jpeg" href="/assets/logos/PartnersLogo.jpg" />
     <link rel="apple-touch-icon" href="/assets/logos/PartnersLogo.jpg" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Flat Reality",
+        "url": "https://flatreality.eu/",
+        "logo": "https://flatreality.eu/assets/logos/StudioLogo.png",
+        "description": "Independent European game studio creating expressive games that leave a lasting impression.",
+        "sameAs": ["https://www.linkedin.com/company/flatreality/"]
+      }
+    </script>
     <title>Flat Reality - Games Should Say Something</title>
   </head>
   <body>
+    <div class="mobile-loader" aria-hidden="true"><img src="/assets/logos/LogoBlackTransparent.png" alt="" /></div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

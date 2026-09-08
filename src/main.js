@@ -1,7 +1,7 @@
 import './style.css'
 
 const A = '/assets'
-const ext = '<span class="ext">↗</span>'
+const ext = `<span class="ext" aria-hidden="true"><img src="${A}/icons/LinkIcon.png" alt=""></span>`
 const host = location.hostname.toLowerCase()
 const localHost = host === 'localhost' || host === '127.0.0.1'
 const partnersHost = host === 'partners.flatreality.eu'
@@ -120,7 +120,11 @@ function bind() {
   const updateScroll=()=>{const y=scrollY;hd.classList.toggle('hidden',y>prev&&y>120);hd.classList.toggle('glass',y>16);prev=y;const start=surface.offsetTop+surface.offsetHeight-innerHeight;const distance=Math.max(240,Math.min(640,ft.offsetHeight*.7));const progress=Math.max(0,Math.min(1,(y-start)/distance));surface.style.setProperty('--surface-scale',String(1-progress*.035));surface.style.setProperty('--surface-radius',`${progress*30}px`);surface.style.setProperty('--surface-lift',`${progress*24}px`)}
   addEventListener('scroll',updateScroll,{passive:true,signal});addEventListener('resize',updateScroll,{passive:true,signal});updateScroll()
   document.querySelectorAll('[data-menu]').forEach(b=>{b.onmouseenter=()=>document.querySelectorAll('.mega').forEach(m=>m.classList.toggle('open',m.dataset.mega===b.dataset.menu));b.onfocus=b.onmouseenter});hd.onmouseleave=()=>document.querySelectorAll('.mega').forEach(m=>m.classList.remove('open'))
-  const burger=hd.querySelector('.burger');burger.onclick=()=>{hd.classList.toggle('menu-open');burger.setAttribute('aria-expanded',hd.classList.contains('menu-open'))}
+  const burger=hd.querySelector('.burger')
+  const setMenu=open=>{hd.classList.toggle('menu-open',open);document.documentElement.classList.toggle('nav-open',open);burger.setAttribute('aria-expanded',String(open))}
+  burger.onclick=()=>setMenu(!hd.classList.contains('menu-open'))
+  hd.querySelectorAll('.mobile-nav a').forEach(link=>link.addEventListener('click',()=>setMenu(false),{signal}))
+  addEventListener('keydown',event=>{if(event.key==='Escape')setMenu(false)},{signal})
   document.querySelectorAll('[data-route]').forEach(a=>a.onclick=e=>{const u=new URL(a.href);if(u.origin!==location.origin)return;e.preventDefault();document.body.classList.add('leaving');setTimeout(()=>{history.pushState({},'',u.pathname+u.hash);render();if(!u.hash)scrollTo(0,0)},260)})
   document.querySelector('[data-cookie-settings]')?.addEventListener('click',()=>cookies(true))
   const slides=[...document.querySelectorAll('.hero-slide')];if(slides.length>1&&!matchMedia('(prefers-reduced-motion:reduce)').matches){let i=0;heroTimer=setInterval(()=>{slides[i].classList.remove('active');i=(i+1)%slides.length;slides[i].classList.add('active')},6500)}
@@ -134,5 +138,13 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
   else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games'};document.body.className='theme-studio'}
   else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy'};document.body.className='theme-privacy'}
   else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio'}
-  document.querySelector('#app').innerHTML=page;applySeo(seo);bind();requestAnimationFrame(()=>{document.body.classList.add('ready');if(location.hash)document.querySelector(location.hash)?.scrollIntoView();else scrollTo(0,0)})}
-addEventListener('popstate',render);render();setTimeout(()=>cookies(),1000)
+  document.querySelector('#app').innerHTML=page;applySeo(seo);bind()
+  let revealed=false
+  const reveal=()=>{if(revealed)return;revealed=true;document.body.classList.add('ready');if(location.hash)document.querySelector(location.hash)?.scrollIntoView();else scrollTo(0,0)}
+  if(matchMedia('(max-width:800px)').matches){
+    const critical=document.querySelector('.hero-slide.active img,.hero-slide.active video,.partners-hero video,.catalog-games img')
+    const mediaReady=!critical||critical.complete||critical.readyState>=2?Promise.resolve():new Promise(resolve=>{critical.addEventListener('load',resolve,{once:true});critical.addEventListener('loadeddata',resolve,{once:true});critical.addEventListener('error',resolve,{once:true})})
+    Promise.race([Promise.all([document.fonts?.ready||Promise.resolve(),mediaReady]),new Promise(resolve=>setTimeout(resolve,1600))]).then(reveal)
+  }else reveal()
+}
+addEventListener('popstate',render);render();setTimeout(()=>cookies(),2500)
