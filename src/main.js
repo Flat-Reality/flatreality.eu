@@ -139,7 +139,11 @@ function cookies(force = false) {
       functionality_storage:consent.preferences?'granted':'denied',
       personalization_storage:consent.preferences?'granted':'denied'
     })
-    if(consent.analytics) window.loadClarity?.()
+    if(consent.analytics) window.loadClarity?.(consent)
+    else if(window.clarity){
+      window.clarity('consentv2',{ad_Storage:consent.marketing?'granted':'denied',analytics_Storage:'denied'})
+      window.clarity('consent',false)
+    }
     el.remove()
     if(previous?.analytics&&!consent.analytics) location.reload()
   }
