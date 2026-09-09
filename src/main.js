@@ -12,7 +12,9 @@ function studioHref(path = '/') {
 }
 
 function partnersHref(path = '/') {
-  return `/partners${path === '/' ? '' : path}`
+  const [pathname,hash] = path.split('#')
+  const suffix = pathname === '/' ? '/' : `${pathname.replace(/\/$/,'')}/`
+  return `/partners${suffix}${hash ? `#${hash}` : ''}`
 }
 
 function typedLabel(text, offset = 0) {
@@ -108,10 +110,11 @@ function productPlaceholder(product) {
   return `<div class="site studio catalog" id="top">${header()}<main class="page-surface"><section class="catalog-hero catalog-hero--dark"><small>Flat Reality Studio</small><h1>${product}</h1><p>${nick ? 'Meta Horror is awaiting an update.' : 'A psychological horror about identity.'}</p><span>Dedicated website coming soon.</span></section></main>${footer()}</div>`
 }
 
-function applySeo({title,description,canonical}) {
+function applySeo({title,description,canonical,robots='index, follow, max-image-preview:large'}) {
   document.title = title
   const set = (selector, key, name, value) => { let node=document.head.querySelector(selector);if(!node){node=document.createElement('meta');node.setAttribute(key,name);document.head.append(node)}node.setAttribute('content',value) }
   set('meta[name="description"]','name','description',description)
+  set('meta[name="robots"]','name','robots',robots)
   set('meta[property="og:title"]','property','og:title',title)
   set('meta[property="og:description"]','property','og:description',description)
   set('meta[property="og:type"]','property','og:type','website')
@@ -154,11 +157,11 @@ function bind() {
 }
 
 function render(){document.body.classList.remove('leaving');const p=location.pathname.toLowerCase().replace(/\/$/,'')||'/';const partnerRoute=p.startsWith('/partners')?(p.slice(9)||'/'):null;let page,seo
-  if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`https://flatreality.eu/partners${partnerRoute==='/'?'':partnerRoute}`};document.body.className='theme-partners'}
-  else if(host==='thenick.flatreality.eu'){page=productPlaceholder('The Nick');seo={title:'The Nick - Flat Reality',description:'Meta Horror is awaiting an update.',canonical:'https://thenick.flatreality.eu/'};document.body.className='theme-studio'}
-  else if(host==='rainheart.flatreality.eu'){page=productPlaceholder('RAIN HEART');seo={title:'RAIN HEART - Flat Reality',description:'A psychological horror about identity from Flat Reality.',canonical:'https://rainheart.flatreality.eu/'};document.body.className='theme-studio'}
-  else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games'};document.body.className='theme-studio'}
-  else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy'};document.body.className='theme-privacy'}
+  if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`https://flatreality.eu/partners${partnerRoute==='/'?'/':`${partnerRoute}/`}`,robots:partnerRoute==='/'?undefined:'noindex, follow'};document.body.className='theme-partners'}
+  else if(host==='thenick.flatreality.eu'){page=productPlaceholder('The Nick');seo={title:'The Nick - Flat Reality',description:'Meta Horror is awaiting an update.',canonical:'https://thenick.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
+  else if(host==='rainheart.flatreality.eu'){page=productPlaceholder('RAIN HEART');seo={title:'RAIN HEART - Flat Reality',description:'A psychological horror about identity from Flat Reality.',canonical:'https://rainheart.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
+  else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games/'};document.body.className='theme-studio'}
+  else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy/'};document.body.className='theme-privacy'}
   else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio'}
   document.querySelector('#app').innerHTML=page;applySeo(seo);bind()
   let revealed=false
