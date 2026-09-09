@@ -127,7 +127,22 @@ function cookies(force = false) {
   if (!force && localStorage.getItem('fr-cookie-consent')) return
   document.querySelector('.cookie-layer')?.remove()
   const el = document.createElement('div'); el.className = 'cookie-layer'; el.innerHTML = `<div class="cookie"><button class="cookie-x">×</button><small>Your privacy, your call</small><h2>Cookies</h2><p>Essential storage keeps the site working. Optional categories stay off unless you choose them.</p><label><span><b>Essential</b><small>Always active</small></span><input type="checkbox" checked disabled></label><label><span><b>Preferences</b><small>Remember choices</small></span><input name="preferences" type="checkbox"></label><label><span><b>Analytics</b><small>Anonymous measurement</small></span><input name="analytics" type="checkbox"></label><label><span><b>Marketing</b><small>Campaign measurement</small></span><input name="marketing" type="checkbox"></label><div><button class="outline accept">Accept all</button><button class="outline save">Save choices</button><button class="essential">Essential only</button></div><a href="/privacy" data-route>Privacy policy ${ext}</a></div>`; document.body.append(el)
-  const save = all => { localStorage.setItem('fr-cookie-consent',JSON.stringify({essential:true,preferences:all||el.querySelector('[name=preferences]').checked,analytics:all||el.querySelector('[name=analytics]').checked,marketing:all||el.querySelector('[name=marketing]').checked})); el.remove() }
+  const save = all => {
+    const previous = JSON.parse(localStorage.getItem('fr-cookie-consent') || 'null')
+    const consent = {essential:true,preferences:all||el.querySelector('[name=preferences]').checked,analytics:all||el.querySelector('[name=analytics]').checked,marketing:all||el.querySelector('[name=marketing]').checked}
+    localStorage.setItem('fr-cookie-consent',JSON.stringify(consent))
+    window.gtag?.('consent','update',{
+      ad_storage:consent.marketing?'granted':'denied',
+      ad_user_data:consent.marketing?'granted':'denied',
+      ad_personalization:consent.marketing?'granted':'denied',
+      analytics_storage:consent.analytics?'granted':'denied',
+      functionality_storage:consent.preferences?'granted':'denied',
+      personalization_storage:consent.preferences?'granted':'denied'
+    })
+    if(consent.analytics) window.loadClarity?.()
+    el.remove()
+    if(previous?.analytics&&!consent.analytics) location.reload()
+  }
   el.querySelector('.accept').onclick=()=>save(true); el.querySelector('.save').onclick=()=>save(false); el.querySelector('.essential').onclick=()=>{el.querySelectorAll('input:not(:disabled)').forEach(i=>i.checked=false);save(false)};el.querySelector('.cookie-x').onclick=()=>el.remove()
 }
 

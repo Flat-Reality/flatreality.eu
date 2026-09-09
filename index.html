@@ -2,6 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'denied',
+        personalization_storage: 'denied',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+      try {
+        const consent = JSON.parse(localStorage.getItem('fr-cookie-consent'));
+        if (consent) gtag('consent', 'update', {
+          ad_storage: consent.marketing ? 'granted' : 'denied',
+          ad_user_data: consent.marketing ? 'granted' : 'denied',
+          ad_personalization: consent.marketing ? 'granted' : 'denied',
+          analytics_storage: consent.analytics ? 'granted' : 'denied',
+          functionality_storage: consent.preferences ? 'granted' : 'denied',
+          personalization_storage: consent.preferences ? 'granted' : 'denied'
+        });
+      } catch {}
+    </script>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MHKVKTHS');</script>
+    <!-- End Google Tag Manager -->
+    <script>
+      window.loadClarity = function () {
+        if (window.__frClarityLoaded) return;
+        window.__frClarityLoaded = true;
+        (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, 'clarity', 'script', 'yftwlbmrte');
+      };
+      try {
+        const consent = JSON.parse(localStorage.getItem('fr-cookie-consent'));
+        if (consent?.analytics) window.loadClarity();
+      } catch {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050505" />
     <meta name="description" content="Flat Reality is an independent European game studio creating expressive games that leave a lasting impression." />
@@ -30,6 +77,10 @@
     <title>Flat Reality - Games Should Say Something</title>
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MHKVKTHS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div class="mobile-loader" aria-hidden="true"><img src="/assets/logos/LogoBlackTransparent.png" alt="" /></div>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
