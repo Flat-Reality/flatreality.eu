@@ -37,12 +37,12 @@ function bytesToBase64(bytes: Uint8Array) { let binary = ""; const size = 0x8000
 async function uploadToGitHub(file: File) {
   const token = Deno.env.get("GITHUB_CHANNEL_TOKEN");
   if (!token) throw new Error("GitHub uploads are not configured yet. Add GITHUB_CHANNEL_TOKEN to the Edge Function secrets.");
-  const repository = Deno.env.get("GITHUB_CONTENT_REPOSITORY") || "Flat-Reality/GitHubSharedContent";
+  const repository = Deno.env.get("GITHUB_CONTENT_REPOSITORY") || "Flat-Reality/flatreality.eu";
   const branch = Deno.env.get("GITHUB_CONTENT_BRANCH") || "main";
   const now = new Date();
   const extension = file.name.split(".").pop()?.replace(/[^a-z0-9]/gi, "").toLowerCase() || "bin";
   const baseName = file.name.replace(/\.[^.]+$/, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-+|-+$/g, "").toLowerCase().slice(0, 48) || "media";
-  const path = `channel/${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, "0")}/${crypto.randomUUID()}-${baseName}.${extension}`;
+  const path = `public/assets/channel/${now.getUTCFullYear()}/${String(now.getUTCMonth() + 1).padStart(2, "0")}/${crypto.randomUUID()}-${baseName}.${extension}`;
   const response = await fetch(`https://api.github.com/repos/${repository}/contents/${path}`, { method: "PUT", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json", "User-Agent": "FR-Channel" }, body: JSON.stringify({ message: `channel: upload ${baseName}.${extension}`, content: bytesToBase64(new Uint8Array(await file.arrayBuffer())), branch }) });
   const result = await response.json();
   if (!response.ok) throw new Error(result?.message ? `GitHub: ${result.message}` : `GitHub upload failed (${response.status}).`);
