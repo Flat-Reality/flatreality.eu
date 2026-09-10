@@ -1,4 +1,5 @@
 import './style.css'
+import { channelCategories, emptyChannelCard, hydrateArticle, hydrateChannelIndex, hydrateHomeChannel } from './channel.js'
 
 const A = '/assets'
 const ext = `<span class="ext" aria-hidden="true"><img src="${A}/icons/LinkIcon.png" alt=""></span>`
@@ -46,16 +47,16 @@ function header(partners = false) {
     <button class="burger" aria-label="Open navigation" aria-expanded="false"><i></i><i></i></button>
     <div class="mega" data-mega="games"><small>Games</small><a href="https://thenick.flatreality.eu" target="_blank">The Nick ${ext}</a><a href="https://store.steampowered.com/app/4397540/RAIN_HEART/" target="_blank">RAIN HEART ${ext}</a></div>
     <div class="mega" data-mega="partners"><small>FR Partners</small><a href="${partnersHref('/outsourcing')}" data-route>Outsourcing</a><a href="${partnersHref('/tech')}" data-route>Technologies</a><a href="${partnersHref('/#network')}" data-route>Network</a></div>
-    <div class="mobile-nav"><a href="${studioHref('/')}" data-route>Studio</a><a href="https://thenick.flatreality.eu">The Nick</a><a href="https://rainheart.flatreality.eu">RAIN HEART</a><a href="${partnersHref('/')}" data-route>FR Partners</a><a href="https://www.linkedin.com/company/flatreality/jobs/">Careers</a></div>
+    <div class="mobile-nav"><a href="${studioHref('/')}" data-route>Studio</a><a href="${studioHref('/channel/')}" data-route>FR Channel</a><a href="https://thenick.flatreality.eu">The Nick</a><a href="https://rainheart.flatreality.eu">RAIN HEART</a><a href="${partnersHref('/')}" data-route>FR Partners</a><a href="https://www.linkedin.com/company/flatreality/jobs/">Careers</a></div>
   </header>`
 }
 
 function footer() {
-  return `<footer class="footer" data-footer><div class="footer-brand"><img src="${A}/logos/LightTransparentLogo.png" alt=""><b>Flat Reality</b></div><div class="footer-cols"><div><h3>Sitemap</h3><a href="${studioHref('/')}" data-route>Studio</a><a href="${studioHref('/games')}" data-route>Games</a><a href="${partnersHref('/')}" data-route>FR Partners</a></div><div><h3>Get Help</h3><a href="mailto:contact@flatreality.eu">Contact</a><a href="${studioHref('/privacy')}" data-route>Privacy</a></div><div><h3>Our socials</h3><a href="https://www.linkedin.com/company/flatreality/" target="_blank">LinkedIn</a><a href="https://instagram.com/flat.reality" target="_blank">Instagram</a><a href="https://bsky.app/profile/flatreality.bsky.social" target="_blank">Bluesky</a><a href="https://www.tiktok.com/@flat.reality" target="_blank">TikTok</a><a href="https://discord.flatreality.eu" target="_blank">Discord</a><a href="https://www.youtube.com/channel/UCLTCUyuodEMx6v9jFJLUylg" target="_blank">YouTube</a><a href="https://www.threads.com/@flat.reality" target="_blank">Threads</a></div><div class="footer-place"><h3>Location</h3><a href="https://maps.google.com/?q=Madrid%2C+Spain">Madrid ${ext}</a></div></div><p class="copyright">© FLAT REALITY ENTERTAINMENT GROUP 2019 - 2026. All trademarks are the property of their respective owners.</p></footer>`
+  return `<footer class="footer" data-footer><div class="footer-brand"><img src="${A}/logos/LightTransparentLogo.png" alt=""><b>Flat Reality</b></div><div class="footer-cols"><div><h3>Sitemap</h3><a href="${studioHref('/')}" data-route>Studio</a><a href="${studioHref('/games/')}" data-route>Games</a><a href="${studioHref('/channel/')}" data-route>FR Channel</a><a href="${partnersHref('/')}" data-route>FR Partners</a></div><div><h3>Get Help</h3><a href="mailto:contact@flatreality.eu">Contact</a><a href="${studioHref('/privacy/')}" data-route>Privacy</a></div><div><h3>Our socials</h3><a href="https://www.linkedin.com/company/flatreality/" target="_blank">LinkedIn</a><a href="https://instagram.com/flat.reality" target="_blank">Instagram</a><a href="https://bsky.app/profile/flatreality.bsky.social" target="_blank">Bluesky</a><a href="https://www.tiktok.com/@flat.reality" target="_blank">TikTok</a><a href="https://discord.flatreality.eu" target="_blank">Discord</a><a href="https://www.youtube.com/channel/UCLTCUyuodEMx6v9jFJLUylg" target="_blank">YouTube</a><a href="https://www.threads.com/@flat.reality" target="_blank">Threads</a></div><div class="footer-place"><h3>Location</h3><a href="https://maps.google.com/?q=Madrid%2C+Spain">Madrid ${ext}</a></div></div><p class="copyright">© FLAT REALITY ENTERTAINMENT GROUP 2019 - 2026. All trademarks are the property of their respective owners.</p></footer>`
 }
 
 function channel(partners = false) {
-  return `<section class="channel"><h2>Flat Reality <em>Channel</em></h2><div class="channel-row"><nav><b>${partners ? 'FR Partners' : 'Studio'}</b><span>The Nick</span><span>RAIN HEART</span><span>FR Partners</span></nav><a class="outline small" href="https://blog.flatreality.eu" target="_blank">Explore more</a></div><div class="channel-track"><a href="https://blog.flatreality.eu" target="_blank" class="news-card"><strong>${partners ? 'Article 3' : 'Article 1'} ${ext}</strong></a><a href="https://blog.flatreality.eu" target="_blank" class="news-card"><strong>${partners ? 'Article 4' : 'Article 2'} ${ext}</strong></a></div></section>`
+  return `<section class="channel"><h2>Flat Reality <em>Channel</em></h2><div class="channel-row"><nav><b>${partners ? 'FR Partners' : 'Studio'}</b><span>The Nick</span><span>RAIN HEART</span><span>FR Partners</span></nav><a class="outline small" href="/channel/" data-route>Explore more</a></div><div class="channel-track" data-home-channel>${emptyChannelCard()}</div></section>`
 }
 
 function studio() {
@@ -110,15 +111,48 @@ function productPlaceholder(product) {
   return `<div class="site studio catalog" id="top">${header()}<main class="page-surface"><section class="catalog-hero catalog-hero--dark"><small>Flat Reality Studio</small><h1>${product}</h1><p>${nick ? 'Meta Horror is awaiting an update.' : 'A psychological horror about identity.'}</p><span>Dedicated website coming soon.</span></section></main>${footer()}</div>`
 }
 
-function applySeo({title,description,canonical,robots='index, follow, max-image-preview:large'}) {
+function channelPage() {
+  const sections = Object.entries(channelCategories).map(([key, category]) => `<section class="channel-category"><header><img src="${category.icon}" alt=""><div><small>Channel category</small><h2>${category.label}</h2></div></header><div class="channel-grid" data-channel-category="${key}">${emptyChannelCard()}</div></section>`).join('')
+  return `<div class="site studio channel-index" id="top">${header()}<main class="page-surface">
+    <section class="channel-index-hero"><small>News, transmissions and stories</small><h1>Flat Reality<br><em>Channel.</em></h1><p>One signal for our studio, games and partners.</p></section>
+    <section class="channel-latest"><header><small>Live transmission</small><h2>Latest News</h2></header><div data-channel-latest>${emptyChannelCard()}</div></section>
+    ${sections}
+  </main>${footer()}</div>`
+}
+
+function articlePage() {
+  return `<div class="site studio channel-post" id="top">${header()}<main class="page-surface" data-article-shell><div class="article-loading"><img src="${A}/logos/StudioLogo.png" alt=""><span>Receiving transmission…</span></div></main>${footer()}</div>`
+}
+
+function adminPage() {
+  return `<div class="admin-app">
+    <section class="admin-login" data-admin-login><form data-admin-login-form autocomplete="off"><img src="${A}/logos/LogoBlackTransparent.png" alt=""><small>Flat Reality Administration</small><h1>Enter workspace.</h1><p>FR Channel is a private publishing surface.</p><label><span>Password</span><input name="password" type="password" required autocomplete="current-password" autofocus></label><button type="submit">Enter workspace</button><output data-login-error aria-live="polite"></output></form></section>
+    <section class="admin-workspace" data-admin-workspace hidden>
+      <aside class="admin-sidebar"><div class="admin-brand"><img src="${A}/logos/LogoBlackTransparent.png" alt=""><span><b>Flat Reality</b><small>Administration</small></span></div><nav><button class="active" type="button"><img src="${A}/icons/PartnersIcon.png" alt="">FR Channel</button></nav><button class="admin-new" type="button" data-new-article>＋ New transmission</button><div class="admin-article-list" data-admin-articles><p class="admin-empty">Loading transmissions…</p></div></aside>
+      <main class="admin-main"><header class="admin-top"><div><small>FR CHANNEL</small><h1 data-editor-heading>Create a transmission</h1></div><span>Website publishing</span></header>
+        <form class="admin-editor" data-channel-form>
+          <section class="admin-panel admin-fields"><label><span>Title</span><input name="title" maxlength="160" required placeholder="A title people will remember"></label><label><span>Category</span><select name="category" required><option value="studio">Studio</option><option value="rain-heart">RAIN HEART</option><option value="the-nick">The Nick</option><option value="fr-partners">FR Partners</option></select></label><label class="admin-slug"><span>Article URL</span><div><b>flatreality.eu/channel/</b><input name="slug" maxlength="96" pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required placeholder="article-name"><b>/</b></div></label></section>
+          <section class="admin-panel admin-cover"><div><small>Cover</small><h2>Lead with a strong image.</h2><p>JPG, PNG, WebP or GIF. Uploaded automatically to GitHub Shared Content.</p><label class="admin-upload"><input type="file" data-cover-input accept="image/jpeg,image/png,image/webp,image/gif"><span>Choose cover</span></label></div><div class="admin-cover-preview" data-cover-preview><span>Cover image</span></div></section>
+          <section class="admin-panel admin-story"><header><div><small>Story</small><h2>Compose the transmission.</h2></div><p>Use the plus button for headings, lists, images, video embeds, separators, quotes and custom HTML.</p></header><div id="channel-editor"></div></section>
+          <section class="admin-panel admin-delivery"><header><small>Delivery channels</small><h2>Where should this appear?</h2></header><div class="delivery-options"><label><input name="website" type="checkbox" checked disabled><img src="${A}/logos/StudioLogo.png" alt=""><span><b>Website</b><small>Always enabled</small></span></label><label><input name="rain-heart" type="checkbox"><img src="${A}/icons/RainHeartIcon.png" alt=""><span><b>RAIN HEART</b><small>Prepared for game delivery</small></span></label><label><input name="the-nick" type="checkbox"><img src="${A}/icons/TheNickIcon.png" alt=""><span><b>The Nick</b><small>Prepared for game delivery</small></span></label></div></section>
+          <footer class="admin-actions"><output data-admin-notice aria-live="polite">Ready to write.</output><div><button class="admin-draft" type="button" data-save-draft>Save draft</button><button class="admin-publish" type="submit">Publish transmission</button></div></footer>
+        </form>
+      </main>
+    </section>
+    <div class="publish-overlay" data-publish-overlay><img src="${A}/logos/StudioLogo.png" alt=""><strong>Sent.</strong></div>
+  </div>`
+}
+
+function applySeo({title,description,canonical,robots='index, follow, max-image-preview:large',image,type='website'}) {
   document.title = title
   const set = (selector, key, name, value) => { let node=document.head.querySelector(selector);if(!node){node=document.createElement('meta');node.setAttribute(key,name);document.head.append(node)}node.setAttribute('content',value) }
   set('meta[name="description"]','name','description',description)
   set('meta[name="robots"]','name','robots',robots)
   set('meta[property="og:title"]','property','og:title',title)
   set('meta[property="og:description"]','property','og:description',description)
-  set('meta[property="og:type"]','property','og:type','website')
+  set('meta[property="og:type"]','property','og:type',type)
   set('meta[property="og:url"]','property','og:url',canonical)
+  set('meta[property="og:image"]','property','og:image',image || 'https://flatreality.eu/assets/images/MAD_GAMES_SHOW-SABADO-TARDE-2539-scaled.jpg')
   set('meta[name="twitter:card"]','name','twitter:card','summary_large_image')
   let link=document.head.querySelector('link[rel="canonical"]');if(!link){link=document.createElement('link');link.rel='canonical';document.head.append(link)}link.href=canonical
 }
@@ -175,14 +209,17 @@ function bind() {
   const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:.08});document.querySelectorAll('section,.values article').forEach(x=>io.observe(x))
 }
 
-function render(){document.body.classList.remove('leaving');const p=location.pathname.toLowerCase().replace(/\/$/,'')||'/';const partnerRoute=p.startsWith('/partners')?(p.slice(9)||'/'):null;let page,seo
-  if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`https://flatreality.eu/partners${partnerRoute==='/'?'/':`${partnerRoute}/`}`,robots:partnerRoute==='/'?undefined:'noindex, follow'};document.body.className='theme-partners'}
+function render(){document.body.classList.remove('leaving');const p=location.pathname.toLowerCase().replace(/\/$/,'')||'/';const partnerRoute=p.startsWith('/partners')?(p.slice(9)||'/'):null;let page,seo,afterRender
+  if(p==='/admin'){page=adminPage();seo={title:'FR Channel Administration',description:'Private Flat Reality publishing workspace.',canonical:'https://flatreality.eu/admin/',robots:'noindex, nofollow, noarchive'};document.body.className='theme-admin';afterRender=()=>import('./admin.js').then(({initAdmin})=>initAdmin())}
+  else if(p==='/channel'){page=channelPage();seo={title:'Flat Reality Channel | News from Flat Reality',description:'The latest news, stories and transmissions from Flat Reality Studio, RAIN HEART, The Nick and FR Partners.',canonical:'https://flatreality.eu/channel/'};document.body.className='theme-studio';afterRender=hydrateChannelIndex}
+  else if(p.startsWith('/channel/')){const slug=p.slice(9);page=articlePage();seo={title:'Receiving transmission | FR Channel',description:'News and stories from Flat Reality.',canonical:`https://flatreality.eu/channel/${slug}/`,robots:'noindex, follow'};document.body.className='theme-studio';afterRender=()=>hydrateArticle(slug,applySeo)}
+  else if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`https://flatreality.eu/partners${partnerRoute==='/'?'/':`${partnerRoute}/`}`,robots:partnerRoute==='/'?undefined:'noindex, follow'};document.body.className='theme-partners';afterRender=()=>hydrateHomeChannel(true)}
   else if(host==='thenick.flatreality.eu'){page=productPlaceholder('The Nick');seo={title:'The Nick - Flat Reality',description:'Meta Horror is awaiting an update.',canonical:'https://thenick.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
   else if(host==='rainheart.flatreality.eu'){page=productPlaceholder('RAIN HEART');seo={title:'RAIN HEART - Flat Reality',description:'A psychological horror about identity from Flat Reality.',canonical:'https://rainheart.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
   else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games/'};document.body.className='theme-studio'}
   else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy/'};document.body.className='theme-privacy'}
-  else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio'}
-  document.querySelector('#app').innerHTML=page;applySeo(seo);bind()
+  else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio';afterRender=()=>hydrateHomeChannel(false)}
+  document.querySelector('#app').innerHTML=page;applySeo(seo);if(p!=='/admin')bind();const hydration=afterRender?.();if(p!=='/admin'&&hydration?.then)hydration.then(()=>bind()).catch(()=>{})
   let revealed=false
   const reveal=()=>{if(revealed)return;revealed=true;document.body.classList.add('ready');if(location.hash)document.querySelector(location.hash)?.scrollIntoView();else scrollTo(0,0)}
   if(matchMedia('(max-width:800px)').matches){
@@ -191,4 +228,4 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
     Promise.race([Promise.all([document.fonts?.ready||Promise.resolve(),mediaReady]),new Promise(resolve=>setTimeout(resolve,1600))]).then(reveal)
   }else reveal()
 }
-addEventListener('popstate',render);render();setTimeout(()=>cookies(),2500)
+addEventListener('popstate',render);render();if(!location.pathname.toLowerCase().startsWith('/admin'))setTimeout(()=>cookies(),2500)

@@ -3,6 +3,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  repository_dispatch:
+    types: [channel-published]
+  schedule:
+    - cron: '17 * * * *'
 permissions:
   contents: read
   pages: write
