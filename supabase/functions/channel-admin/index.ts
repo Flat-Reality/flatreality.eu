@@ -9,6 +9,7 @@ const allowedOrigins = new Set(["https://flatreality.eu", "https://www.flatreali
 const categories = new Set(["studio", "rain-heart", "the-nick", "fr-partners"]);
 const deliveryOptions = new Set(["website", "rain-heart", "the-nick"]);
 const encoder = new TextEncoder();
+let cachedGitHubToken: string | null | undefined;
 
 function cors(req: Request) { const origin = req.headers.get("origin") || ""; return { "Access-Control-Allow-Origin": allowedOrigins.has(origin) ? origin : "https://flatreality.eu", "Access-Control-Allow-Headers": "content-type, x-channel-password, apikey, authorization", "Access-Control-Allow-Methods": "POST, OPTIONS", "Vary": "Origin" }; }
 function json(req: Request, body: unknown, status = 200) { return new Response(JSON.stringify(body), { status, headers: { ...cors(req), "Content-Type": "application/json", "Cache-Control": "no-store" } }); }
@@ -34,8 +35,18 @@ async function verifyPassword(req: Request) {
 function slugify(value: string) { return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 96); }
 function bytesToBase64(bytes: Uint8Array) { let binary = ""; const size = 0x8000; for (let offset = 0; offset < bytes.length; offset += size) binary += String.fromCharCode(...bytes.subarray(offset, offset + size)); return btoa(binary); }
 
+async function getGitHubToken() {
+  if (cachedGitHubToken !== undefined) return cachedGitHubToken;
+  const environmentToken = Deno.env.get("GITHUB_CHANNEL_TOKEN");
+  if (environmentToken) return cachedGitHubToken = environmentToken;
+  const { data, error } = await db.rpc("channel_github_token");
+  if (error) console.error("Unable to read the GitHub token from Vault", error);
+  cachedGitHubToken = !error && typeof data === "string" && data ? data : null;
+  return cachedGitHubToken;
+}
+
 async function uploadToGitHub(file: File) {
-  const token = Deno.env.get("GITHUB_CHANNEL_TOKEN");
+  const token = await getGitHubToken();
   if (!token) throw new Error("GitHub uploads are not configured yet. Add GITHUB_CHANNEL_TOKEN to the Edge Function secrets.");
   const repository = Deno.env.get("GITHUB_CONTENT_REPOSITORY") || "Flat-Reality/flatreality.eu";
   const branch = Deno.env.get("GITHUB_CONTENT_BRANCH") || "main";
@@ -50,7 +61,7 @@ async function uploadToGitHub(file: File) {
 }
 
 async function dispatchRebuild() {
-  const token = Deno.env.get("GITHUB_CHANNEL_TOKEN");
+  const token = await getGitHubToken();
   if (!token) return;
   await fetch("https://api.github.com/repos/Flat-Reality/flatreality.eu/dispatches", { method: "POST", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28", "Content-Type": "application/json", "User-Agent": "FR-Channel" }, body: JSON.stringify({ event_type: "channel-published" }) });
 }
