@@ -56,7 +56,8 @@ function footer() {
 }
 
 function channel(partners = false) {
-  return `<section class="channel"><h2>Flat Reality <em>Channel</em></h2><div class="channel-row"><nav><b>${partners ? 'FR Partners' : 'Studio'}</b><span>The Nick</span><span>RAIN HEART</span><span>FR Partners</span></nav><a class="outline small" href="/channel/" data-route>Explore more</a></div><div class="channel-track" data-home-channel>${emptyChannelCard()}</div></section>`
+  const categoryLink = (slug, label, active) => `<a href="/channel/#${slug}" data-route>${active ? `<b>${label}</b>` : label}</a>`
+  return `<section class="channel"><h2>Flat Reality <em>Channel</em></h2><div class="channel-row"><nav>${categoryLink('studio', 'Studio', !partners)}${categoryLink('the-nick', 'The Nick', false)}${categoryLink('rain-heart', 'RAIN HEART', false)}${categoryLink('fr-partners', 'FR Partners', partners)}</nav><a class="outline small" href="/channel/" data-route>Explore more</a></div><div class="channel-track" data-home-channel>${emptyChannelCard()}</div></section>`
 }
 
 function studio() {
@@ -112,10 +113,10 @@ function productPlaceholder(product) {
 }
 
 function channelPage() {
-  const sections = Object.entries(channelCategories).map(([key, category]) => `<section class="channel-category"><header><img src="${category.icon}" alt=""><div><small>Channel category</small><h2>${category.label}</h2></div></header><div class="channel-grid" data-channel-category="${key}">${emptyChannelCard()}</div></section>`).join('')
+  const sections = Object.entries(channelCategories).map(([key, category]) => `<section class="channel-category" id="${key}"><header><img src="${category.icon}" alt=""><h2>${category.label}</h2></header><div class="channel-grid" data-channel-category="${key}">${emptyChannelCard()}</div></section>`).join('')
   return `<div class="site studio channel-index" id="top">${header()}<main class="page-surface">
-    <section class="channel-index-hero"><small>News, transmissions and stories</small><h1>Flat Reality<br><em>Channel.</em></h1><p>One signal for our studio, games and partners.</p></section>
-    <section class="channel-latest"><header><small>Live transmission</small><h2>Latest News</h2></header><div data-channel-latest>${emptyChannelCard()}</div></section>
+    <section class="channel-index-hero"><h1>Flat Reality Channel</h1></section>
+    <section class="channel-latest"><header><h2>Latest News</h2></header><div data-channel-latest>${emptyChannelCard()}</div></section>
     ${sections}
   </main>${footer()}</div>`
 }

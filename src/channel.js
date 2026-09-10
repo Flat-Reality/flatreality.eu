@@ -72,7 +72,7 @@ export function renderArticleBlocks(output = {}) {
 }
 
 export function emptyChannelCard() {
-  return `<article class="channel-card channel-card--empty"><img src="/assets/images/ChannelInterference.gif" alt=""><span>Come back soon.</span></article>`
+  return `<article class="channel-card channel-card--empty"><img src="/assets/images/ChannelInterference.gif" alt=""><span>Coming soon</span></article>`
 }
 
 export function articleCard(article, featured = false) {
