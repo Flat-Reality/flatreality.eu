@@ -20,7 +20,8 @@ function articleBody(article) {
 
 async function getPublishedArticles() {
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/channel_articles?select=*&status=eq.published&order=published_at.desc&limit=100`, {
+    const cutoff = encodeURIComponent(new Date().toISOString())
+    const response = await fetch(`${SUPABASE_URL}/rest/v1/channel_articles?select=*&status=in.(published,scheduled)&published_at=lte.${cutoff}&order=published_at.desc&limit=100`, {
       headers: { apikey: SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}` },
       signal: AbortSignal.timeout(8000)
     })

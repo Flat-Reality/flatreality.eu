@@ -13,7 +13,7 @@ let articleCache
 export async function getPublishedArticles(force = false) {
   if (!force && articleCache) return articleCache
   const { data, error } = await supabase.from('channel_articles').select('*')
-    .eq('status', 'published').lte('published_at', new Date().toISOString())
+    .in('status', ['published', 'scheduled']).lte('published_at', new Date().toISOString())
     .order('published_at', { ascending: false }).limit(100)
   if (error) throw error
   articleCache = data || []
@@ -22,7 +22,7 @@ export async function getPublishedArticles(force = false) {
 
 export async function getArticle(slug) {
   const { data, error } = await supabase.from('channel_articles').select('*')
-    .eq('slug', slug).eq('status', 'published').maybeSingle()
+    .eq('slug', slug).in('status', ['published', 'scheduled']).lte('published_at', new Date().toISOString()).maybeSingle()
   if (error) throw error
   return data
 }

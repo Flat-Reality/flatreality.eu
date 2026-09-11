@@ -6,6 +6,21 @@ let currentArticle = null
 let cover = { url: '', path: '' }
 let customSlug = false
 
+function localDateValue(value = new Date()) {
+  const date = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000)
+  return local.toISOString().slice(0, 16)
+}
+
+function updatePublicationMode() {
+  const input = document.querySelector('[name=published_at]')
+  const scheduled = input.value && new Date(input.value).getTime() > Date.now()
+  document.querySelector('[data-publication-mode]').textContent = scheduled ? 'Will be published automatically at the selected time.' : 'Publishes immediately with the selected date.'
+  document.querySelector('.admin-publish').textContent = scheduled ? 'Schedule transmission' : 'Publish transmission'
+  return scheduled
+}
+
 async function adminRequest(body, options = {}) {
   const response = await fetch(CHANNEL_ADMIN_ENDPOINT, {
     method: 'POST',
@@ -48,7 +63,7 @@ function showNotice(message, error = false) {
 
 function showDeliveryAnimation(status) {
   const overlay = document.querySelector('[data-publish-overlay]')
-  overlay.querySelector('strong').textContent = status === 'draft' ? 'Draft saved.' : 'Sent.'
+  overlay.querySelector('strong').textContent = status === 'draft' ? 'Draft saved.' : status === 'scheduled' ? 'Scheduled.' : 'Sent.'
   overlay.classList.add('visible')
   setTimeout(() => overlay.classList.remove('visible'), 1500)
 }
@@ -124,12 +139,14 @@ async function loadArticle(article) {
   document.querySelector('[name=title]').value = article.title
   document.querySelector('[name=category]').value = article.category
   document.querySelector('[name=slug]').value = article.slug
+  document.querySelector('[name=published_at]').value = localDateValue(article.published_at || new Date())
   document.querySelector('[name=rain-heart]').checked = article.delivery_channels?.includes('rain-heart') || false
   document.querySelector('[name=the-nick]').checked = article.delivery_channels?.includes('the-nick') || false
   const preview = document.querySelector('[data-cover-preview]')
   preview.innerHTML = cover.url ? `<img src="${cover.url}" alt="">` : '<span>Cover image</span>'
   await editor.render(article.content)
   document.querySelector('[data-editor-heading]').textContent = article.status === 'draft' ? 'Edit draft' : 'Edit post'
+  updatePublicationMode()
   scrollTo({ top: 0, behavior: 'smooth' })
 }
 
@@ -139,9 +156,11 @@ function newArticle() {
   cover = { url: '', path: '' }
   document.querySelector('[data-channel-form]').reset()
   document.querySelector('[name=website]').checked = true
+  document.querySelector('[name=published_at]').value = localDateValue()
   document.querySelector('[data-cover-preview]').innerHTML = '<span>Cover image</span>'
   document.querySelector('[data-editor-heading]').textContent = 'Create a transmission'
   editor.render({ blocks: [{ type: 'paragraph', data: { text: '' } }] })
+  updatePublicationMode()
 }
 
 async function saveArticle(status) {
@@ -149,7 +168,8 @@ async function saveArticle(status) {
   if (status === 'published' && !form.reportValidity()) return
   if (status === 'draft' && !form.elements.title.value.trim()) form.elements.title.value = 'Untitled transmission'
   if (!form.elements.slug.value.trim()) form.elements.slug.value = slugify(form.elements.title.value)
-  showNotice(status === 'draft' ? 'Saving draft…' : 'Publishing…')
+  const scheduled = status === 'published' && updatePublicationMode()
+  showNotice(status === 'draft' ? 'Saving draft…' : scheduled ? 'Scheduling…' : 'Publishing…')
   try {
     const content = await editor.save()
     const excerpt = plainText(content).slice(0, 320) || (status === 'draft' ? 'Draft in progress.' : '')
@@ -164,11 +184,12 @@ async function saveArticle(status) {
       slug: form.elements.slug.value,
       excerpt, content,
       cover_url: cover.url, cover_path: cover.path,
+      published_at: new Date(form.elements.published_at.value).toISOString(),
       delivery_channels: delivery
     })
     currentArticle = article
-    showNotice(status === 'draft' ? 'Draft saved.' : `Published at /channel/${article.slug}/`)
-    showDeliveryAnimation(status)
+    showNotice(status === 'draft' ? 'Draft saved.' : article.status === 'scheduled' ? `Scheduled for ${new Date(article.published_at).toLocaleString()}.` : `Published at /channel/${article.slug}/`)
+    showDeliveryAnimation(status === 'draft' ? 'draft' : article.status)
     await refreshArticles()
   } catch (error) { showNotice(error.message, true) }
 }
@@ -181,6 +202,9 @@ async function openWorkspace() {
   const form = document.querySelector('[data-channel-form]')
   const title = form.elements.title
   const slug = form.elements.slug
+  const publicationDate = form.elements.published_at
+  publicationDate.value = localDateValue()
+  publicationDate.addEventListener('input', updatePublicationMode)
   slug.addEventListener('input', () => { customSlug = true; slug.value = slugify(slug.value) })
   title.addEventListener('input', () => { if (!customSlug) slug.value = slugify(title.value) })
   form.addEventListener('submit', event => { event.preventDefault(); saveArticle('published') })
