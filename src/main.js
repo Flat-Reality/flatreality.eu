@@ -146,6 +146,7 @@ function adminPage() {
 
 function applySeo({title,description,canonical,robots='index, follow, max-image-preview:large',image,type='website'}) {
   document.title = title
+  const socialImage = image || 'https://flatreality.eu/assets/images/FlatRealityCover.png'
   const set = (selector, key, name, value) => { let node=document.head.querySelector(selector);if(!node){node=document.createElement('meta');node.setAttribute(key,name);document.head.append(node)}node.setAttribute('content',value) }
   set('meta[name="description"]','name','description',description)
   set('meta[name="robots"]','name','robots',robots)
@@ -153,8 +154,9 @@ function applySeo({title,description,canonical,robots='index, follow, max-image-
   set('meta[property="og:description"]','property','og:description',description)
   set('meta[property="og:type"]','property','og:type',type)
   set('meta[property="og:url"]','property','og:url',canonical)
-  set('meta[property="og:image"]','property','og:image',image || 'https://flatreality.eu/assets/images/MAD_GAMES_SHOW-SABADO-TARDE-2539-scaled.jpg')
+  set('meta[property="og:image"]','property','og:image',socialImage)
   set('meta[name="twitter:card"]','name','twitter:card','summary_large_image')
+  set('meta[name="twitter:image"]','name','twitter:image',socialImage)
   let link=document.head.querySelector('link[rel="canonical"]');if(!link){link=document.createElement('link');link.rel='canonical';document.head.append(link)}link.href=canonical
 }
 

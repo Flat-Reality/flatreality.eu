@@ -64,7 +64,11 @@ function renderRoute(route) {
     .replace(/<link rel="canonical" href="[^"]*"\s*\/>/, `<link rel="canonical" href="${canonical}" />`)
     .replace('<div id="app"></div>', `<div id="app"><div class="seo-prerender">${body}</div></div>`)
     .replace('</head>', `<style>.seo-prerender{min-height:100vh;padding:120px max(24px,8vw);background:#090909;color:#fff;font-family:Arial,sans-serif}.seo-prerender main{max-width:960px}.seo-prerender h1{font-size:clamp(40px,7vw,96px);line-height:1}.seo-prerender p{max-width:720px;font-size:18px;line-height:1.5}.seo-prerender nav{display:flex;gap:24px;flex-wrap:wrap}.seo-prerender a{color:inherit}.seo-prerender img{max-width:100%;height:auto}</style></head>`)
-  if (route.image) html = html.replace(/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${escapeHtml(route.image)}" />`)
+  if (route.image) html = html
+    .replace(/<meta property="og:image" content="[^"]*"\s*\/>/, `<meta property="og:image" content="${escapeHtml(route.image)}" />`)
+    .replace(/<meta name="twitter:image" content="[^"]*"\s*\/>/, `<meta name="twitter:image" content="${escapeHtml(route.image)}" />`)
+    .replace(/\s*<meta property="og:image:(?:width|height|alt)" content="[^"]*"\s*\/>/g, '')
+    .replace(/\s*<meta name="twitter:image:alt" content="[^"]*"\s*\/>/, '')
   return html
 }
 
