@@ -1,7 +1,9 @@
 import './style.css'
 import { channelCategories, emptyChannelCard, hydrateArticle, hydrateChannelIndex, hydrateHomeChannel } from './channel.js'
 
-const A = '/assets'
+const BASE_PATH = import.meta.env.BASE_URL
+const SITE_URL = 'https://flat-reality.github.io/flatreality.eu'
+const A = `${BASE_PATH}assets`
 const ext = `<span class="ext" aria-hidden="true"><img src="${A}/icons/LinkIcon.png" alt=""></span>`
 const host = location.hostname.toLowerCase()
 const localHost = host === 'localhost' || host === '127.0.0.1'
@@ -9,13 +11,14 @@ let pageEvents
 let heroTimer
 
 function studioHref(path = '/') {
-  return localHost || host === 'flatreality.eu' || host === 'www.flatreality.eu' ? path : `https://flatreality.eu${path}`
+  const localSite = localHost || host === 'flatreality.eu' || host === 'www.flatreality.eu' || host.endsWith('.github.io')
+  return localSite ? `${BASE_PATH}${path.replace(/^\/+/, '')}` : `${SITE_URL}${path}`
 }
 
 function partnersHref(path = '/') {
   const [pathname,hash] = path.split('#')
   const suffix = pathname === '/' ? '/' : `${pathname.replace(/\/$/,'')}/`
-  return `/partners${suffix}${hash ? `#${hash}` : ''}`
+  return `${BASE_PATH}partners${suffix}${hash ? `#${hash}` : ''}`
 }
 
 function typedLabel(text, offset = 0) {
@@ -37,7 +40,7 @@ function brandTransition(fromPartners, navigate) {
 
 function header(partners = false) {
   const gamesActive = !partners && (
-    location.pathname.toLowerCase().startsWith('/games') ||
+    routePath().startsWith('/games') ||
     host === 'thenick.flatreality.eu' ||
     host === 'rainheart.flatreality.eu'
   )
@@ -56,8 +59,8 @@ function footer() {
 }
 
 function channel(partners = false) {
-  const categoryLink = (slug, label, active) => `<a href="/channel/#${slug}" data-route>${active ? `<b>${label}</b>` : label}</a>`
-  return `<section class="channel"><h2>Flat Reality <em>Channel</em></h2><div class="channel-row"><nav>${categoryLink('studio', 'Studio', !partners)}${categoryLink('the-nick', 'The Nick', false)}${categoryLink('rain-heart', 'RAIN HEART', false)}${categoryLink('fr-partners', 'FR Partners', partners)}</nav><a class="outline small" href="/channel/" data-route>Explore more</a></div><div class="channel-track" data-home-channel>${emptyChannelCard()}</div></section>`
+  const categoryLink = (slug, label, active) => `<a href="${studioHref('/channel/#' + slug)}" data-route>${active ? `<b>${label}</b>` : label}</a>`
+  return `<section class="channel"><h2>Flat Reality <em>Channel</em></h2><div class="channel-row"><nav>${categoryLink('studio', 'Studio', !partners)}${categoryLink('the-nick', 'The Nick', false)}${categoryLink('rain-heart', 'RAIN HEART', false)}${categoryLink('fr-partners', 'FR Partners', partners)}</nav><a class="outline small" href="${studioHref('/channel/')}" data-route>Explore more</a></div><div class="channel-track" data-home-channel>${emptyChannelCard()}</div></section>`
 }
 
 function studio() {
@@ -146,7 +149,7 @@ function adminPage() {
 
 function applySeo({title,description,canonical,robots='index, follow, max-image-preview:large',image,type='website'}) {
   document.title = title
-  const socialImage = image || 'https://flatreality.eu/assets/images/FlatRealityCover.png'
+  const socialImage = image || `${SITE_URL}/assets/images/FlatRealityCover.png`
   const set = (selector, key, name, value) => { let node=document.head.querySelector(selector);if(!node){node=document.createElement('meta');node.setAttribute(key,name);document.head.append(node)}node.setAttribute('content',value) }
   set('meta[name="description"]','name','description',description)
   set('meta[name="robots"]','name','robots',robots)
@@ -163,7 +166,7 @@ function applySeo({title,description,canonical,robots='index, follow, max-image-
 function cookies(force = false) {
   if (!force && localStorage.getItem('fr-cookie-consent')) return
   document.querySelector('.cookie-layer')?.remove()
-  const el = document.createElement('div'); el.className = 'cookie-layer'; el.innerHTML = `<div class="cookie"><button class="cookie-x">×</button><small>Your privacy, your call</small><h2>Cookies</h2><p>Essential storage keeps the site working. Optional categories stay off unless you choose them.</p><label><span><b>Essential</b><small>Always active</small></span><input type="checkbox" checked disabled></label><label><span><b>Preferences</b><small>Remember choices</small></span><input name="preferences" type="checkbox"></label><label><span><b>Analytics</b><small>Anonymous measurement</small></span><input name="analytics" type="checkbox"></label><label><span><b>Marketing</b><small>Campaign measurement</small></span><input name="marketing" type="checkbox"></label><div><button class="outline accept">Accept all</button><button class="outline save">Save choices</button><button class="essential">Essential only</button></div><a href="/privacy" data-route>Privacy policy ${ext}</a></div>`; document.body.append(el)
+  const el = document.createElement('div'); el.className = 'cookie-layer'; el.innerHTML = `<div class="cookie"><button class="cookie-x">×</button><small>Your privacy, your call</small><h2>Cookies</h2><p>Essential storage keeps the site working. Optional categories stay off unless you choose them.</p><label><span><b>Essential</b><small>Always active</small></span><input type="checkbox" checked disabled></label><label><span><b>Preferences</b><small>Remember choices</small></span><input name="preferences" type="checkbox"></label><label><span><b>Analytics</b><small>Anonymous measurement</small></span><input name="analytics" type="checkbox"></label><label><span><b>Marketing</b><small>Campaign measurement</small></span><input name="marketing" type="checkbox"></label><div><button class="outline accept">Accept all</button><button class="outline save">Save choices</button><button class="essential">Essential only</button></div><a href="${studioHref('/privacy')}" data-route>Privacy policy ${ext}</a></div>`; document.body.append(el)
   const save = all => {
     const previous = JSON.parse(localStorage.getItem('fr-cookie-consent') || 'null')
     const consent = {essential:true,preferences:all||el.querySelector('[name=preferences]').checked,analytics:all||el.querySelector('[name=analytics]').checked,marketing:all||el.querySelector('[name=marketing]').checked}
@@ -206,22 +209,23 @@ function bind() {
   burger.onclick=()=>setMenu(!hd.classList.contains('menu-open'))
   hd.querySelectorAll('.mobile-nav a').forEach(link=>link.addEventListener('click',()=>setMenu(false),{signal}))
   addEventListener('keydown',event=>{if(event.key==='Escape')setMenu(false)},{signal})
-  document.querySelectorAll('[data-route]').forEach(a=>a.onclick=e=>{const u=new URL(a.href);if(u.origin!==location.origin)return;e.preventDefault();const currentPartner=location.pathname.toLowerCase().startsWith('/partners');const targetPartner=u.pathname.toLowerCase().startsWith('/partners');const navigate=()=>{history.pushState({},'',u.pathname+u.hash);render();if(!u.hash)scrollTo(0,0)};if(currentPartner!==targetPartner&&!matchMedia('(max-width:800px)').matches){closeMega();brandTransition(targetPartner,navigate)}else{document.body.classList.add('leaving');setTimeout(navigate,260)}})
+  document.querySelectorAll('[data-route]').forEach(a=>a.onclick=e=>{const u=new URL(a.href);if(u.origin!==location.origin)return;e.preventDefault();const currentPartner=routePath().startsWith('/partners');const targetPartner=u.pathname.replace(BASE_PATH,'/').toLowerCase().startsWith('/partners');const navigate=()=>{history.pushState({},'',u.pathname+u.hash);render();if(!u.hash)scrollTo(0,0)};if(currentPartner!==targetPartner&&!matchMedia('(max-width:800px)').matches){closeMega();brandTransition(targetPartner,navigate)}else{document.body.classList.add('leaving');setTimeout(navigate,260)}})
   document.querySelector('[data-cookie-settings]')?.addEventListener('click',()=>cookies(true))
   const slides=[...document.querySelectorAll('.hero-slide')];if(slides.length>1&&!matchMedia('(prefers-reduced-motion:reduce)').matches){let i=0;heroTimer=setInterval(()=>{slides[i].classList.remove('active');i=(i+1)%slides.length;slides[i].classList.add('active')},6500)}
   const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add('in')),{threshold:.08});document.querySelectorAll('section,.values article').forEach(x=>io.observe(x))
 }
 
-function render(){document.body.classList.remove('leaving');const p=location.pathname.toLowerCase().replace(/\/$/,'')||'/';const partnerRoute=p.startsWith('/partners')?(p.slice(9)||'/'):null;let page,seo,afterRender
-  if(p==='/admin'){page=adminPage();seo={title:'FR Channel Administration',description:'Private Flat Reality publishing workspace.',canonical:'https://flatreality.eu/admin/',robots:'noindex, nofollow, noarchive'};document.body.className='theme-admin';afterRender=()=>import('./admin.js').then(({initAdmin})=>initAdmin())}
-  else if(p==='/channel'){page=channelPage();seo={title:'Flat Reality Channel | News from Flat Reality',description:'The latest news, stories and transmissions from Flat Reality Studio, RAIN HEART, The Nick and FR Partners.',canonical:'https://flatreality.eu/channel/'};document.body.className='theme-studio';afterRender=hydrateChannelIndex}
-  else if(p.startsWith('/channel/')){const slug=p.slice(9);page=articlePage();seo={title:'Receiving transmission | FR Channel',description:'News and stories from Flat Reality.',canonical:`https://flatreality.eu/channel/${slug}/`,robots:'noindex, follow'};document.body.className='theme-studio';afterRender=()=>hydrateArticle(slug,applySeo)}
-  else if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`https://flatreality.eu/partners${partnerRoute==='/'?'/':`${partnerRoute}/`}`,robots:partnerRoute==='/'?undefined:'noindex, follow'};document.body.className='theme-partners';afterRender=()=>hydrateHomeChannel(true)}
+function routePath() { return location.pathname.replace(BASE_PATH, '/').toLowerCase().replace(/\/$/,'') || '/' }
+function render(){document.body.classList.remove('leaving');const p=routePath();const partnerRoute=p.startsWith('/partners')?(p.slice(9)||'/'):null;let page,seo,afterRender
+  if(p==='/admin'){page=adminPage();seo={title:'FR Channel Administration',description:'Private Flat Reality publishing workspace.',canonical:`${SITE_URL}/admin/`,robots:'noindex, nofollow, noarchive'};document.body.className='theme-admin';afterRender=()=>import('./admin.js').then(({initAdmin})=>initAdmin())}
+  else if(p==='/channel'){page=channelPage();seo={title:'Flat Reality Channel | News from Flat Reality',description:'The latest news, stories and transmissions from Flat Reality Studio, RAIN HEART, The Nick and FR Partners.',canonical:`${SITE_URL}/channel/`};document.body.className='theme-studio';afterRender=hydrateChannelIndex}
+  else if(p.startsWith('/channel/')){const slug=p.slice(9);page=articlePage();seo={title:'Receiving transmission | FR Channel',description:'News and stories from Flat Reality.',canonical:`${SITE_URL}/channel/${slug}/`,robots:'noindex, follow'};document.body.className='theme-studio';afterRender=()=>hydrateArticle(slug,applySeo)}
+  else if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`${SITE_URL}/partners${partnerRoute==='/'?'/':`${partnerRoute}/`}`,robots:partnerRoute==='/'?undefined:'noindex, follow'};document.body.className='theme-partners';afterRender=()=>hydrateHomeChannel(true)}
   else if(host==='thenick.flatreality.eu'){page=productPlaceholder('The Nick');seo={title:'The Nick - Flat Reality',description:'Meta Horror is awaiting an update.',canonical:'https://thenick.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
   else if(host==='rainheart.flatreality.eu'){page=productPlaceholder('RAIN HEART');seo={title:'RAIN HEART - Flat Reality',description:'A psychological horror about identity from Flat Reality.',canonical:'https://rainheart.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
-  else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games/'};document.body.className='theme-studio'}
-  else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy/'};document.body.className='theme-privacy'}
-  else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio';afterRender=()=>hydrateHomeChannel(false)}
+  else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:`${SITE_URL}/games/`};document.body.className='theme-studio'}
+  else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:`${SITE_URL}/privacy/`};document.body.className='theme-privacy'}
+  else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:`${SITE_URL}/`};document.body.className='theme-studio';afterRender=()=>hydrateHomeChannel(false)}
   document.querySelector('#app').innerHTML=page;applySeo(seo);if(p!=='/admin')bind();const hydration=afterRender?.();if(p!=='/admin'&&hydration?.then)hydration.then(()=>bind()).catch(()=>{})
   let revealed=false
   const reveal=()=>{if(revealed)return;revealed=true;document.body.classList.add('ready');if(location.hash)document.querySelector(location.hash)?.scrollIntoView();else scrollTo(0,0)}
@@ -231,4 +235,4 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
     Promise.race([Promise.all([document.fonts?.ready||Promise.resolve(),mediaReady]),new Promise(resolve=>setTimeout(resolve,1600))]).then(reveal)
   }else reveal()
 }
-addEventListener('popstate',render);render();if(!location.pathname.toLowerCase().startsWith('/admin'))setTimeout(()=>cookies(),2500)
+addEventListener('popstate',render);render();if(!routePath().startsWith('/admin'))setTimeout(()=>cookies(),2500)

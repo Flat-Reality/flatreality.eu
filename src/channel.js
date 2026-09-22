@@ -1,11 +1,14 @@
 import DOMPurify from 'dompurify'
 import { supabase } from './lib/supabase.js'
 
+const BASE_PATH = import.meta.env.BASE_URL
+const sitePath = path => `${BASE_PATH}${path.replace(/^\/+/, '')}`
+
 export const channelCategories = {
-  studio: { label: 'Studio', icon: '/assets/icons/PartnersIcon.png' },
-  'rain-heart': { label: 'RAIN HEART', icon: '/assets/icons/RainHeartIcon.png' },
-  'the-nick': { label: 'The Nick', icon: '/assets/icons/TheNickIcon.png' },
-  'fr-partners': { label: 'FR Partners', icon: '/assets/icons/PartnersIcon.png' }
+  studio: { label: 'Studio', icon: sitePath('/assets/icons/PartnersIcon.png') },
+  'rain-heart': { label: 'RAIN HEART', icon: sitePath('/assets/icons/RainHeartIcon.png') },
+  'the-nick': { label: 'The Nick', icon: sitePath('/assets/icons/TheNickIcon.png') },
+  'fr-partners': { label: 'FR Partners', icon: sitePath('/assets/icons/PartnersIcon.png') }
 }
 
 let articleCache
@@ -72,13 +75,13 @@ export function renderArticleBlocks(output = {}) {
 }
 
 export function emptyChannelCard() {
-  return `<article class="channel-card channel-card--empty"><img src="/assets/images/ChannelInterference.gif" alt=""><span>Coming soon</span></article>`
+  return `<article class="channel-card channel-card--empty"><img src="${sitePath('/assets/images/ChannelInterference.gif')}" alt=""><span>Coming soon</span></article>`
 }
 
 export function articleCard(article, featured = false) {
-  const image = article.cover_url || '/assets/images/ChannelInterference.gif'
+  const image = article.cover_url || sitePath('/assets/images/ChannelInterference.gif')
   const category = channelCategories[article.category]?.label || 'Studio'
-  return `<a class="channel-card ${featured ? 'channel-card--featured' : ''}" href="/channel/${escapeHtml(article.slug)}/" data-route><img src="${escapeHtml(image)}" alt=""><span class="channel-card__shade"></span><span class="channel-card__meta">${escapeHtml(category)} · ${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span><strong>${escapeHtml(article.title)}</strong></a>`
+  return `<a class="channel-card ${featured ? 'channel-card--featured' : ''}" href="${sitePath(`/channel/${escapeHtml(article.slug)}/`)}" data-route><img src="${escapeHtml(image)}" alt=""><span class="channel-card__shade"></span><span class="channel-card__meta">${escapeHtml(category)} · ${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span><strong>${escapeHtml(article.title)}</strong></a>`
 }
 
 export async function hydrateChannelIndex() {
@@ -112,13 +115,13 @@ export async function hydrateArticle(slug, applySeo) {
   try {
     const article = await getArticle(slug)
     if (!article) {
-      target.innerHTML = '<div class="article-missing"><h1>Transmission not found.</h1><a href="/channel/" data-route>Return to FR Channel</a></div>'
+      target.innerHTML = `<div class="article-missing"><h1>Transmission not found.</h1><a href="${sitePath('/channel/')}" data-route>Return to FR Channel</a></div>`
       applySeo({ title: 'Article not found | FR Channel', description: 'This FR Channel article could not be found.', canonical: location.href, robots: 'noindex, follow' })
       return
     }
     const category = channelCategories[article.category]?.label || 'Studio'
-    target.innerHTML = `<article class="channel-article"><nav aria-label="Breadcrumb"><a href="/channel/" data-route>FR Channel</a><span>•</span><span>${escapeHtml(category)}</span><span>•</span><span>${escapeHtml(article.title)}</span></nav><header><p>${escapeHtml(category)}</p><h1>${escapeHtml(article.title)}</h1><time datetime="${escapeHtml(article.published_at)}">${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>${article.cover_url ? `<img class="channel-article__cover" src="${escapeHtml(article.cover_url)}" alt="">` : ''}<div class="channel-article__body">${renderArticleBlocks(article.content)}</div></article>`
-    applySeo({ title: `${article.title} | FR Channel`, description: article.excerpt, canonical: `https://flatreality.eu/channel/${article.slug}/`, image: article.cover_url, type: 'article' })
+    target.innerHTML = `<article class="channel-article"><nav aria-label="Breadcrumb"><a href="${sitePath('/channel/')}" data-route>FR Channel</a><span>•</span><span>${escapeHtml(category)}</span><span>•</span><span>${escapeHtml(article.title)}</span></nav><header><p>${escapeHtml(category)}</p><h1>${escapeHtml(article.title)}</h1><time datetime="${escapeHtml(article.published_at)}">${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>${article.cover_url ? `<img class="channel-article__cover" src="${escapeHtml(article.cover_url)}" alt="">` : ''}<div class="channel-article__body">${renderArticleBlocks(article.content)}</div></article>`
+    applySeo({ title: `${article.title} | FR Channel`, description: article.excerpt, canonical: `https://flat-reality.github.io/flatreality.eu/channel/${article.slug}/`, image: article.cover_url, type: 'article' })
   } catch {
     target.innerHTML = '<div class="article-missing"><h1>Signal interrupted.</h1><p>Please try again shortly.</p></div>'
   }

@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://flatreality.eu/</loc>
+    <loc>https://flat-reality.github.io/flatreality.eu/</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://flatreality.eu/games/</loc>
+    <loc>https://flat-reality.github.io/flatreality.eu/games/</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://flatreality.eu/channel/</loc>
+    <loc>https://flat-reality.github.io/flatreality.eu/channel/</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://flatreality.eu/partners/</loc>
+    <loc>https://flat-reality.github.io/flatreality.eu/partners/</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://flatreality.eu/privacy/</loc>
+    <loc>https://flat-reality.github.io/flatreality.eu/privacy/</loc>
     <lastmod>2026-09-10</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>

@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://flatreality.eu/sitemap.xml
+Sitemap: https://flat-reality.github.io/flatreality.eu/sitemap.xml

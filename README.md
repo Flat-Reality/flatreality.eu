@@ -25,6 +25,6 @@ Copy `.env.example` to `.env` and add the project URL and public anonymous key. 
 
 ## GitHub Pages
 
-Pushes to `main` run `.github/workflows/deploy.yml`. The build generates `404.html` for client-side routes, `.nojekyll`, and the apex-domain `CNAME`. Configure Pages to use GitHub Actions and point the domain's DNS records at GitHub Pages.
+Pushes to `main` run `.github/workflows/deploy.yml`. The project site is published at `https://flat-reality.github.io/flatreality.eu/`. The build generates `404.html` for client-side routes and `.nojekyll`; no custom domain is configured.
 
-`partners.flatreality.eu` needs its own Pages custom-domain binding (or a proxy/second Pages project) for a valid HTTPS certificate. The frontend hostname routing is already implemented.
+Product subdomains such as `thenick.flatreality.eu` remain external destinations and are not part of this project-site migration.
