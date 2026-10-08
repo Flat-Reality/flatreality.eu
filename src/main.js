@@ -1,5 +1,8 @@
 import './style.css'
 import { channelCategories, emptyChannelCard, hydrateArticle, hydrateChannelIndex, hydrateHomeChannel } from './channel.js'
+import { initOutsourcing, outsourcingPage } from './partners-outsourcing.js'
+import { initInquiry, inquiryPage } from './partners-inquiry.js'
+import privacyPolicyText from './privacy-policy-en.txt?raw'
 
 const A = '/assets'
 const ext = `<span class="ext" aria-hidden="true"><img src="${A}/icons/LinkIcon.png" alt=""></span>`
@@ -85,8 +88,28 @@ function partners() {
   </main>${footer()}</div>`
 }
 
+const policyEscape = value => String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char])
+const policyInline = value => policyEscape(value)
+  .replace(/(https:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>')
+  .replace(/([A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,})/gi, '<a href="mailto:$1">$1</a>')
+
+function privacyPolicyBody() {
+  return privacyPolicyText.trim().split(/\r?\n\s*\r?\n/).map((block, index) => {
+    const lines = block.split(/\r?\n/).map(line => line.trim()).filter(Boolean)
+    const first = lines[0] || ''
+    if (index === 0 || first === 'FLAT REALITY PRIVACY POLICY') return ''
+    if (first.startsWith('DRAFT —')) return `<aside class="legal-draft"><strong>${policyInline(first)}</strong><p>${lines.slice(1).map(policyInline).join('<br>')}</p></aside>`
+    if (lines.every(line => /^(Version|Effective date|Last updated):/.test(line))) return `<p class="legal-meta">${lines.map(policyInline).join('<br>')}</p>`
+    if (/^\d+\.\d+\./.test(first)) return `<h3>${policyInline(first)}</h3>${lines.length > 1 ? `<p>${policyInline(lines.slice(1).join(' '))}</p>` : ''}`
+    if (/^\d+\.\s/.test(first)) return `<h2>${policyInline(first)}</h2>${lines.length > 1 ? `<p>${policyInline(lines.slice(1).join(' '))}</p>` : ''}`
+    if (lines.every(line => line.startsWith('- '))) return `<ul>${lines.map(line => `<li>${policyInline(line.slice(2))}</li>`).join('')}</ul>`
+    if (first.startsWith('Controller:')) return `<address>${lines.map(policyInline).join('<br>')}</address>`
+    return `<p>${policyInline(lines.join(' '))}</p>`
+  }).join('')
+}
+
 function privacy() {
-  return `<div class="site privacy" id="top">${header()}<main class="page-surface"><section class="legal-head"><span>Legal · Updated 5 September 2026</span><h1>Privacy Policy</h1></section><article class="legal"><h2>Privacy and cookies</h2><p>Flat Reality processes personal information transparently and in accordance with applicable privacy law, including the GDPR and CCPA/CPRA where relevant.</p><h2>Information we process</h2><p>We may process information you send in an enquiry and limited technical records required to deliver and secure this website. Optional analytics and marketing technologies remain disabled until you consent.</p><h2>Your rights</h2><p>You may request access, correction, deletion, restriction or portability of your information, object to certain processing, or withdraw consent. Contact <a href="mailto:contact@flatreality.eu">contact@flatreality.eu</a>.</p><button class="outline" data-cookie-settings>Cookie settings</button></article></main>${footer()}</div>`
+  return `<div class="site privacy" id="top">${header()}<main class="page-surface"><section class="legal-head"><span>Legal · Privacy Policy</span><h1>Privacy Policy</h1></section><article class="legal legal--full">${privacyPolicyBody()}<button class="outline" data-cookie-settings>Cookie settings</button></article></main>${footer()}</div>`
 }
 
 const catalogPages = {
@@ -127,7 +150,13 @@ function articlePage() {
 
 function adminPage() {
   return `<div class="admin-app">
-    <section class="admin-login" data-admin-login><form data-admin-login-form autocomplete="off"><img src="${A}/logos/LogoBlackTransparent.png" alt=""><small>Flat Reality Administration</small><h1>Enter workspace.</h1><p>FR Channel is a private publishing surface.</p><label><span>Password</span><input name="password" type="password" required autocomplete="current-password" autofocus></label><button type="submit">Enter workspace</button><output data-login-error aria-live="polite"></output></form></section>
+    <section class="admin-login admin-login--microsoft" data-admin-login>
+      <button class="microsoft-signin" type="button" data-microsoft-signin>
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABUAAAAVCAYAAACpF6WWAAAAdklEQVR4AeyQwQmAQAwENxYg2ILF6NcC7EXsxQL8ajG2INhATO787yf+cjCQxzIH0+CHV6TP1CvD/15OKMN3RepHJCmNrFld2RRo90sYXmsdIAzf1abbrWDYWg8ow2aoUr8CSWlgzE+VTS3E3AkYNpMRwrAZXgAAAP//8mU1bQAAAAZJREFUAwAIY3Urx7NCCwAAAABJRU5ErkJggg==" alt="" width="21" height="21">
+        <span>Sign in with Microsoft</span>
+      </button>
+      <output data-login-error aria-live="polite"></output>
+    </section>
     <section class="admin-workspace" data-admin-workspace hidden>
       <aside class="admin-sidebar"><div class="admin-brand"><img src="${A}/logos/LogoBlackTransparent.png" alt=""><span><b>Flat Reality</b><small>Administration</small></span></div><nav><button class="active" type="button"><img src="${A}/icons/PartnersIcon.png" alt="">FR Channel</button></nav><button class="admin-new" type="button" data-new-article>＋ New transmission</button><div class="admin-article-list" data-admin-articles><p class="admin-empty">Loading transmissions…</p></div></aside>
       <main class="admin-main"><header class="admin-top"><div><small>FR CHANNEL</small><h1 data-editor-heading>Create a transmission</h1></div><span>Website publishing</span></header>
@@ -144,7 +173,7 @@ function adminPage() {
   </div>`
 }
 
-function applySeo({title,description,canonical,robots='index, follow, max-image-preview:large',image,type='website'}) {
+function applySeo({title,description,canonical,robots='index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',image,imageAlt='Flat Reality',type='website',structuredData=[]}) {
   document.title = title
   const socialImage = image || 'https://flatreality.eu/assets/images/FlatRealityCover.png'
   const set = (selector, key, name, value) => { let node=document.head.querySelector(selector);if(!node){node=document.createElement('meta');node.setAttribute(key,name);document.head.append(node)}node.setAttribute('content',value) }
@@ -155,9 +184,16 @@ function applySeo({title,description,canonical,robots='index, follow, max-image-
   set('meta[property="og:type"]','property','og:type',type)
   set('meta[property="og:url"]','property','og:url',canonical)
   set('meta[property="og:image"]','property','og:image',socialImage)
+  set('meta[property="og:image:alt"]','property','og:image:alt',imageAlt)
+  set('meta[property="og:site_name"]','property','og:site_name','Flat Reality')
   set('meta[name="twitter:card"]','name','twitter:card','summary_large_image')
+  set('meta[name="twitter:title"]','name','twitter:title',title)
+  set('meta[name="twitter:description"]','name','twitter:description',description)
   set('meta[name="twitter:image"]','name','twitter:image',socialImage)
+  set('meta[name="twitter:image:alt"]','name','twitter:image:alt',imageAlt)
   let link=document.head.querySelector('link[rel="canonical"]');if(!link){link=document.createElement('link');link.rel='canonical';document.head.append(link)}link.href=canonical
+  document.head.querySelectorAll('script[data-dynamic-seo]').forEach(node=>node.remove())
+  ;(Array.isArray(structuredData)?structuredData:[structuredData]).filter(Boolean).forEach(data=>{const script=document.createElement('script');script.type='application/ld+json';script.dataset.dynamicSeo='true';script.textContent=JSON.stringify(data).replace(/</g,'\\u003c');document.head.append(script)})
 }
 
 function cookies(force = false) {
@@ -216,13 +252,15 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
   if(p==='/admin'){page=adminPage();seo={title:'FR Channel Administration',description:'Private Flat Reality publishing workspace.',canonical:'https://flatreality.eu/admin/',robots:'noindex, nofollow, noarchive'};document.body.className='theme-admin';afterRender=()=>import('./admin.js').then(({initAdmin})=>initAdmin())}
   else if(p==='/channel'){page=channelPage();seo={title:'Flat Reality Channel | News from Flat Reality',description:'The latest news, stories and transmissions from Flat Reality Studio, RAIN HEART, The Nick and FR Partners.',canonical:'https://flatreality.eu/channel/'};document.body.className='theme-studio';afterRender=hydrateChannelIndex}
   else if(p.startsWith('/channel/')){const slug=p.slice(9);page=articlePage();seo={title:'Receiving transmission | FR Channel',description:'News and stories from Flat Reality.',canonical:`https://flatreality.eu/channel/${slug}/`,robots:'noindex, follow'};document.body.className='theme-studio';afterRender=()=>hydrateArticle(slug,applySeo)}
+  else if(partnerRoute==='/outsourcing/new-inquiry'){page=inquiryPage();seo={title:'Start a Project | Flat Reality Partners',description:'Tell Flat Reality Partners about your game development project.',canonical:'https://flatreality.eu/partners/outsourcing/new-inquiry/',robots:'noindex, nofollow, noarchive'};document.body.className='theme-partners theme-inquiry';afterRender=initInquiry}
+  else if(partnerRoute==='/outsourcing'){page=outsourcingPage({header,footer,partnersHref});seo={title:'Game Development Outsourcing & Production Services | Flat Reality Partners',description:'Flexible game development outsourcing for indie studios and creative teams. Explore Unity development, game design, art, audio and production support.',canonical:'https://flatreality.eu/partners/outsourcing/'};document.body.className='theme-partners';afterRender=initOutsourcing}
   else if(partnerRoute!==null){page=partnerRoute==='/'?partners():catalogPage(partnerRoute);seo={title:partnerRoute==='/'?'Flat Reality Partners - Create More. Manage Less.':`${catalogPages[partnerRoute]?.[0]||'FR Partners'} - Flat Reality Partners`,description:catalogPages[partnerRoute]?.[1]||'Creative production services and technologies from Flat Reality Partners.',canonical:`https://flatreality.eu/partners${partnerRoute==='/'?'/':`${partnerRoute}/`}`,robots:partnerRoute==='/'?undefined:'noindex, follow'};document.body.className='theme-partners';afterRender=()=>hydrateHomeChannel(true)}
   else if(host==='thenick.flatreality.eu'){page=productPlaceholder('The Nick');seo={title:'The Nick - Flat Reality',description:'Meta Horror is awaiting an update.',canonical:'https://thenick.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
   else if(host==='rainheart.flatreality.eu'){page=productPlaceholder('RAIN HEART');seo={title:'RAIN HEART - Flat Reality',description:'A psychological horror about identity from Flat Reality.',canonical:'https://rainheart.flatreality.eu/',robots:'noindex, follow'};document.body.className='theme-studio'}
   else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games/'};document.body.className='theme-studio'}
   else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy/'};document.body.className='theme-privacy'}
   else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio';afterRender=()=>hydrateHomeChannel(false)}
-  document.querySelector('#app').innerHTML=page;applySeo(seo);if(p!=='/admin')bind();const hydration=afterRender?.();if(p!=='/admin'&&hydration?.then)hydration.then(()=>bind()).catch(()=>{})
+  document.querySelector('#app').innerHTML=page;applySeo(seo);if(p!=='/admin'&&partnerRoute!=='/outsourcing/new-inquiry')bind();const hydration=afterRender?.();if(p!=='/admin'&&partnerRoute!=='/outsourcing/new-inquiry'&&hydration?.then)hydration.then(()=>bind()).catch(()=>{})
   let revealed=false
   const reveal=()=>{if(revealed)return;revealed=true;document.body.classList.add('ready');if(location.hash)document.querySelector(location.hash)?.scrollIntoView();else scrollTo(0,0)}
   if(matchMedia('(max-width:800px)').matches){
@@ -231,4 +269,4 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
     Promise.race([Promise.all([document.fonts?.ready||Promise.resolve(),mediaReady]),new Promise(resolve=>setTimeout(resolve,1600))]).then(reveal)
   }else reveal()
 }
-addEventListener('popstate',render);render();if(!location.pathname.toLowerCase().startsWith('/admin'))setTimeout(()=>cookies(),2500)
+addEventListener('popstate',render);render();if(!location.pathname.toLowerCase().startsWith('/admin')&&!location.pathname.toLowerCase().startsWith('/partners/outsourcing/new-inquiry'))setTimeout(()=>cookies(),2500)

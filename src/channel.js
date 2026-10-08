@@ -59,7 +59,7 @@ export function renderArticleBlocks(output = {}) {
       case 'delimiter': return '<hr>'
       case 'image': {
         const url = safeUrl(data.file?.url || data.url)
-        return url ? `<figure class="article-media ${data.stretched ? 'stretched' : ''}"><img src="${url}" alt="${escapeHtml(data.caption || '')}" loading="lazy">${data.caption ? `<figcaption>${DOMPurify.sanitize(data.caption)}</figcaption>` : ''}</figure>` : ''
+        return url ? `<figure class="article-media ${data.stretched ? 'stretched' : ''}"><img src="${url}" alt="${escapeHtml(data.caption || 'Illustration from this Flat Reality Channel article')}" loading="lazy" decoding="async">${data.caption ? `<figcaption>${DOMPurify.sanitize(data.caption)}</figcaption>` : ''}</figure>` : ''
       }
       case 'embed': {
         const url = safeUrl(data.embed || data.source)
@@ -72,13 +72,13 @@ export function renderArticleBlocks(output = {}) {
 }
 
 export function emptyChannelCard() {
-  return `<article class="channel-card channel-card--empty"><img src="/assets/images/ChannelInterference.gif" alt=""><span>Coming soon</span></article>`
+  return `<article class="channel-card channel-card--empty"><img src="/assets/images/ChannelInterference.gif" alt="Flat Reality Channel signal interference" loading="lazy" decoding="async"><span>Coming soon</span></article>`
 }
 
 export function articleCard(article, featured = false) {
   const image = article.cover_url || '/assets/images/ChannelInterference.gif'
   const category = channelCategories[article.category]?.label || 'Studio'
-  return `<a class="channel-card ${featured ? 'channel-card--featured' : ''}" href="/channel/${escapeHtml(article.slug)}/" data-route><img src="${escapeHtml(image)}" alt=""><span class="channel-card__shade"></span><span class="channel-card__meta">${escapeHtml(category)} · ${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span><strong>${escapeHtml(article.title)}</strong></a>`
+  return `<a class="channel-card ${featured ? 'channel-card--featured' : ''}" href="/channel/${escapeHtml(article.slug)}/" data-route><img src="${escapeHtml(image)}" alt="${escapeHtml(`${article.title} — ${category}`)}" loading="lazy" decoding="async"><span class="channel-card__shade"></span><span class="channel-card__meta">${escapeHtml(category)} · ${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</span><strong>${escapeHtml(article.title)}</strong></a>`
 }
 
 export async function hydrateChannelIndex() {
@@ -117,8 +117,16 @@ export async function hydrateArticle(slug, applySeo) {
       return
     }
     const category = channelCategories[article.category]?.label || 'Studio'
-    target.innerHTML = `<article class="channel-article"><nav aria-label="Breadcrumb"><a href="/channel/" data-route>FR Channel</a><span>•</span><span>${escapeHtml(category)}</span><span>•</span><span>${escapeHtml(article.title)}</span></nav><header><p>${escapeHtml(category)}</p><h1>${escapeHtml(article.title)}</h1><time datetime="${escapeHtml(article.published_at)}">${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>${article.cover_url ? `<img class="channel-article__cover" src="${escapeHtml(article.cover_url)}" alt="">` : ''}<div class="channel-article__body">${renderArticleBlocks(article.content)}</div></article>`
-    applySeo({ title: `${article.title} | FR Channel`, description: article.excerpt, canonical: `https://flatreality.eu/channel/${article.slug}/`, image: article.cover_url, type: 'article' })
+    const canonical = `https://flatreality.eu/channel/${article.slug}/`
+    const image = article.cover_url || 'https://flatreality.eu/assets/images/FlatRealityCover.png'
+    target.innerHTML = `<article class="channel-article" itemscope itemtype="https://schema.org/NewsArticle"><nav aria-label="Breadcrumb"><a href="/channel/" data-route>FR Channel</a><span>•</span><span>${escapeHtml(category)}</span><span>•</span><span>${escapeHtml(article.title)}</span></nav><header><p>${escapeHtml(category)}</p><h1 itemprop="headline">${escapeHtml(article.title)}</h1><p itemprop="description">${escapeHtml(article.excerpt || '')}</p><time itemprop="datePublished" datetime="${escapeHtml(article.published_at)}">${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>${article.cover_url ? `<img itemprop="image" class="channel-article__cover" src="${escapeHtml(article.cover_url)}" alt="${escapeHtml(`${article.title} cover image`)}" fetchpriority="high" decoding="async">` : ''}<div class="channel-article__body" itemprop="articleBody">${renderArticleBlocks(article.content)}</div></article>`
+    applySeo({
+      title: `${article.title} | FR Channel`, description: article.excerpt, canonical, image, imageAlt: `${article.title} cover image`, type: 'article',
+      structuredData: [
+        { '@context':'https://schema.org', '@type':'NewsArticle', headline:article.title, description:article.excerpt, image:[image], datePublished:article.published_at, dateModified:article.updated_at || article.published_at, articleSection:category, inLanguage:'en', isAccessibleForFree:true, mainEntityOfPage:{'@type':'WebPage','@id':canonical}, author:{'@type':'Organization','@id':'https://flatreality.eu/#organization',name:'Flat Reality'}, publisher:{'@type':'Organization','@id':'https://flatreality.eu/#organization',name:'Flat Reality',logo:{'@type':'ImageObject',url:'https://flatreality.eu/assets/logos/StudioLogo.png'}} },
+        { '@context':'https://schema.org', '@type':'BreadcrumbList', itemListElement:[{'@type':'ListItem',position:1,name:'Flat Reality',item:'https://flatreality.eu/'},{'@type':'ListItem',position:2,name:'FR Channel',item:'https://flatreality.eu/channel/'},{'@type':'ListItem',position:3,name:article.title,item:canonical}] }
+      ]
+    })
   } catch {
     target.innerHTML = '<div class="article-missing"><h1>Signal interrupted.</h1><p>Please try again shortly.</p></div>'
   }

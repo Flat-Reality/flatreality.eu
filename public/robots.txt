@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /partners/outsourcing/new-inquiry/
 
 Sitemap: https://flatreality.eu/sitemap.xml
+Sitemap: https://flatreality.eu/sitemap-pages.xml
+Sitemap: https://flatreality.eu/news-sitemap.xml
+Sitemap: https://flatreality.eu/image-sitemap.xml

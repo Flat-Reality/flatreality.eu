@@ -5,31 +5,74 @@ const projectUrl = Deno.env.get("SUPABASE_URL")!;
 const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}");
 const serviceKey = secretKeys.default || Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const db = createClient(projectUrl, serviceKey, { auth: { persistSession: false } });
-const allowedOrigins = new Set(["https://flatreality.eu", "https://www.flatreality.eu", "http://localhost:5173", "http://127.0.0.1:5173"]);
+const publicKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+const authClient = createClient(projectUrl, publicKey, { auth: { persistSession: false, autoRefreshToken: false } });
+const allowedOrigins = new Set(["https://flatreality.eu", "https://www.flatreality.eu", "http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"]);
 const categories = new Set(["studio", "rain-heart", "the-nick", "fr-partners"]);
 const deliveryOptions = new Set(["website", "rain-heart", "the-nick"]);
-const encoder = new TextEncoder();
+const defaultAdminGroupIds = ["44b21558-be01-48f5-86ee-dd7c1cb07d0c", "92dfddc6-10de-4aad-ba63-10e0459e187a"];
 let cachedGitHubToken: string | null | undefined;
+let graphToken: { value: string; expiresAt: number } | null = null;
 
-function cors(req: Request) { const origin = req.headers.get("origin") || ""; return { "Access-Control-Allow-Origin": allowedOrigins.has(origin) ? origin : "https://flatreality.eu", "Access-Control-Allow-Headers": "content-type, x-channel-password, apikey, authorization", "Access-Control-Allow-Methods": "POST, OPTIONS", "Vary": "Origin" }; }
+function cors(req: Request) { const origin = req.headers.get("origin") || ""; return { "Access-Control-Allow-Origin": allowedOrigins.has(origin) ? origin : "https://flatreality.eu", "Access-Control-Allow-Headers": "content-type, apikey, authorization, x-microsoft-provider-token", "Access-Control-Allow-Methods": "POST, OPTIONS", "Vary": "Origin" }; }
 function json(req: Request, body: unknown, status = 200) { return new Response(JSON.stringify(body), { status, headers: { ...cors(req), "Content-Type": "application/json", "Cache-Control": "no-store" } }); }
-async function sha256(value: string) { const digest = await crypto.subtle.digest("SHA-256", encoder.encode(value)); return Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, "0")).join(""); }
-function constantTimeEqual(a: string, b: string) { if (a.length !== b.length) return false; let result = 0; for (let i = 0; i < a.length; i++) result |= a.charCodeAt(i) ^ b.charCodeAt(i); return result === 0; }
-async function requestKey(req: Request) { const address = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("cf-connecting-ip") || "unknown"; return sha256(address); }
 
-async function verifyPassword(req: Request) {
-  const password = req.headers.get("x-channel-password") || "";
-  const key = await requestKey(req);
-  const now = Date.now();
-  const { data: attempt } = await db.from("channel_admin_attempts").select("attempts,window_started_at").eq("request_key", key).maybeSingle();
-  const activeWindow = attempt && now - new Date(attempt.window_started_at).getTime() < 15 * 60 * 1000;
-  if (activeWindow && attempt.attempts >= 10) return { ok: false, rateLimited: true };
-  const { data: config, error } = await db.from("channel_admin_config").select("password_hash").eq("singleton", true).single();
-  if (error || !config) return { ok: false, serverError: true };
-  const ok = constantTimeEqual(await sha256(password), config.password_hash);
-  if (ok) { await db.from("channel_admin_attempts").delete().eq("request_key", key); return { ok: true }; }
-  await db.from("channel_admin_attempts").upsert({ request_key: key, attempts: activeWindow ? attempt.attempts + 1 : 1, window_started_at: activeWindow ? attempt.window_started_at : new Date().toISOString(), updated_at: new Date().toISOString() });
-  return { ok: false };
+function tokenClaims(token: string) {
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(atob(payload.replace(/-/g, "+").replace(/_/g, "/")));
+  } catch { return {}; }
+}
+
+async function getGraphToken(tenantId: string) {
+  if (graphToken && graphToken.expiresAt > Date.now() + 60_000) return graphToken.value;
+  const clientId = Deno.env.get("ENTRA_CLIENT_ID") || "9f293a7f-8c33-4743-92a4-db923a32a61c";
+  const clientSecret = Deno.env.get("ENTRA_CLIENT_SECRET");
+  if (!clientSecret) throw new Error("Microsoft administration access is not configured.");
+  const body = new URLSearchParams({ client_id: clientId, client_secret: clientSecret, scope: "https://graph.microsoft.com/.default", grant_type: "client_credentials" });
+  const response = await fetch(`https://login.microsoftonline.com/${tenantId}/oauth2/v2.0/token`, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body });
+  const result = await response.json();
+  if (!response.ok || !result.access_token) throw new Error("Microsoft administration access is unavailable.");
+  graphToken = { value: result.access_token, expiresAt: Date.now() + Number(result.expires_in || 3600) * 1000 };
+  return graphToken.value;
+}
+
+async function verifyAdmin(req: Request) {
+  const bearer = req.headers.get("authorization")?.match(/^Bearer\s+(.+)$/i)?.[1];
+  if (!bearer) return { ok: false, status: 401, error: "Sign in with Microsoft to continue." };
+  const { data, error } = await authClient.auth.getUser(bearer);
+  if (error || !data.user) return { ok: false, status: 401, error: "Your Microsoft session is invalid or expired." };
+  const azure = data.user.identities?.find(identity => identity.provider === "azure");
+  if (!azure) return { ok: false, status: 403, error: "Use the approved Microsoft work account." };
+
+  const tenantId = Deno.env.get("ENTRA_TENANT_ID") || "ca5ad43b-0a46-4cfd-9bdb-f8fdf508be8d";
+  const identity = azure.identity_data || {};
+  let objectId = String(identity.oid || data.user.user_metadata?.oid || "");
+  let signedInTenant = String(identity.tid || data.user.user_metadata?.tid || "");
+  const providerToken = req.headers.get("x-microsoft-provider-token") || "";
+
+  if ((!objectId || !signedInTenant) && providerToken) {
+    const claims = tokenClaims(providerToken);
+    signedInTenant = signedInTenant || String(claims.tid || "");
+    const profileResponse = await fetch("https://graph.microsoft.com/v1.0/me?$select=id", { headers: { Authorization: `Bearer ${providerToken}` } });
+    const profile = await profileResponse.json();
+    if (profileResponse.ok) objectId = objectId || String(profile.id || "");
+  }
+
+  if (signedInTenant !== tenantId || !objectId) return { ok: false, status: 403, error: "This account is not part of the approved Flat Reality tenant." };
+  const configuredGroupIds = (Deno.env.get("ENTRA_ADMIN_GROUP_IDS") || "").split(",").map(value => value.trim()).filter(Boolean);
+  const groupIds = configuredGroupIds.length ? configuredGroupIds : defaultAdminGroupIds;
+
+  const appToken = await getGraphToken(tenantId);
+  const membershipResponse = await fetch(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(objectId)}/checkMemberGroups`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${appToken}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ groupIds })
+  });
+  const membership = await membershipResponse.json();
+  if (!membershipResponse.ok) return { ok: false, status: 503, error: "Microsoft group membership could not be verified." };
+  if (!Array.isArray(membership.value) || !membership.value.length) return { ok: false, status: 403, error: "Your account is not assigned to Administration or Operations." };
+  return { ok: true, userId: data.user.id, tenantId, objectId };
 }
 
 function slugify(value: string) { return value.toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 96); }
@@ -69,11 +112,9 @@ async function dispatchRebuild() {
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req) });
   if (req.method !== "POST") return json(req, { error: "Method not allowed" }, 405);
-  const auth = await verifyPassword(req);
+  const auth = await verifyAdmin(req);
   if (!auth.ok) {
-    if (auth.rateLimited) return json(req, { error: "Too many attempts. Try again in 15 minutes." }, 429);
-    if (auth.serverError) return json(req, { error: "Admin authentication is not configured." }, 503);
-    return json(req, { error: "Incorrect password." }, 401);
+    return json(req, { error: auth.error }, auth.status);
   }
   try {
     const contentType = req.headers.get("content-type") || "";

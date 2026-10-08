@@ -1,0 +1,161 @@
+FLAT REALITY PRIVACY POLICY
+
+DRAFT — DO NOT PUBLISH UNTIL ALL BRACKETED DETAILS ARE COMPLETED
+Version: 1.0
+Effective date: [PUBLICATION DATE]
+Last updated: [PUBLICATION DATE]
+
+This Policy explains how ANDREI PUCHKOV [REPLACE WITH THE THEN-CURRENT LEGAL NAME IF IT CHANGES BEFORE PUBLICATION], a self-employed individual established in Spain, holding tax identification number [NIF/NIE], with professional address at [FULL PROFESSIONAL ADDRESS], trading as FLAT REALITY ENTERTAINMENT GROUP (“Flat Reality”, “we”, “us”), processes personal data.
+
+We are the controller for the processing described here. Contact us at legal@flatreality.eu. We have not appointed a data protection officer because we are not currently required to do so; we will update this Policy if that changes.
+
+1. SCOPE
+
+This Policy applies to:
+
+- Flat Reality games, applications and digital products that link to it;
+- FR Connect identity, achievement and cloud save/synchronisation features;
+- flatreality.eu and subdomains controlled by Flat Reality;
+- support requests, legal requests and direct communications.
+
+A platform, store, social network or external site may process data as an independent controller under its own privacy notice. This Policy does not control those independent operations.
+
+2. PRIVACY CHOICES AT A GLANCE
+
+- The main offline part of our games does not require FR Connect.
+- On PC, we do not create an FR Connect profile until the user voluntarily starts connection.
+- Expanded game analytics and optional web analytics remain off until consent.
+- Refusing optional analytics does not block the Game or purchased features.
+- We do not sell personal data for money.
+- We do not use game data for behavioural advertising without a valid consent or choice mechanism.
+
+3. DATA WE PROCESS
+
+3.1. Core game and essential diagnostics
+
+We may process IP address, pseudonymous technical identifiers, platform, device model or characteristics, operating system, language, Game version, timestamps, security logs, error information and minimum diagnostics. We do not intend to use this layer to build advertising profiles or analyse individual narrative choices.
+
+3.2. FR Connect, Xbox and cloud services
+
+When you activate FR Connect we may receive or generate Xbox user ID/XUID, gamertag, avatar or avatar URL, PlayFab ID where PlayFab is enabled in that product build, linked platform identifiers, sign-in state, achievements, progress, save files, synchronisation metadata, quota, last-modified time and logs needed to provide and protect the service.
+
+We do not receive your Microsoft/Xbox password. Authentication uses Microsoft interfaces. A product build that does not include PlayFab will not send data to PlayFab merely because that provider is listed in this Policy.
+
+3.3. Voluntary game analytics
+
+If you consent, Unity Analytics or another tool identified in the consent notice may receive a pseudonymous identifier, device and session data, Game version, approximate country derived from IP, launch/close events, performance, errors and interaction or progress events designed by Flat Reality. We will not use these events to collect free text, private communications or special-category data.
+
+3.4. Website and cookies
+
+When you visit our sites we process HTTP requests, IP address, user-agent, timestamps and security logs needed to deliver and protect the site. Your browser stores a local preference to remember cookie choices.
+
+With consent, Google Analytics may process identifiers and browsing data to measure use and performance, and Microsoft Clarity may process page interactions, events, device data and session recordings using available masking controls. Google Tag Manager manages tags but does not itself authorise an optional category. FR Channel articles and assets are delivered through Supabase; access to public content may produce technical delivery logs.
+
+3.5. Communications
+
+If you contact Flat Reality, we process your email address, name, message, attachments, message metadata and information needed to reply, verify identity or resolve a request. Do not send sensitive information that is unnecessary.
+
+If you separately opt in while submitting a Partners inquiry, we may use your name and email address to send marketing news about opportunities for Flat Reality Partners. This is optional, does not affect our response to your inquiry, and may be withdrawn at any time through the unsubscribe method in a message or by contacting legal@flatreality.eu.
+
+3.6. Purchases and platforms
+
+Stores process payments and normally do not disclose full payment-card details to us. We may receive transaction identifiers, country or region, product, licence, entitlement status, refunds and fraud-prevention information needed to deliver purchases, DLC or support.
+
+4. PURPOSES AND LEGAL BASES
+
+- Run the game and provide requested features. Data: licence, device and configuration. Legal basis: performance of contract.
+- FR Connect, cloud/cross-save and achievements. Data: platform identity, progress, files and logs. Legal basis: performance of the service requested on connection.
+- Security, fraud prevention and minimum diagnostics. Data: IP, identifiers, errors and logs. Legal basis: legitimate interests in protecting and maintaining the service.
+- Expanded game analytics. Data: events, device and session. Legal basis: consent.
+- Google Analytics and Microsoft Clarity. Data: cookies/identifiers, browsing and interaction. Legal basis: consent.
+- Respond to requests and exercise rights. Data: contact, message and proof of identity. Legal basis: contract, legal obligation or legitimate interests, depending on the request.
+- Accounting, claims and compliance. Data: relevant transactions and communications. Legal basis: legal obligation and establishment or defence of legal claims.
+
+Where we rely on legitimate interests, we assess necessity, proportionality and impact and provide a right to object. We do not make a contract conditional on consent to processing that is not necessary for it.
+
+5. CONSENT AND CONTROLS
+
+Accepting an EULA is not consent to analytics. Optional controls are separate, off by default and explain the purpose before collection begins. You may withdraw consent through game settings or the website’s “Cookie settings”. Withdrawal does not affect earlier lawful processing.
+
+Website categories are:
+
+- Essential: security, delivery, load balancing and storage of your choice; always active.
+- Preferences: remember non-essential site choices; require consent where the law requires it.
+- Analytics: Google Analytics and Microsoft Clarity; off until consent.
+- Marketing: campaign or advertising tags if added in future; off until consent and currently not used to sell data.
+
+6. CHILDREN
+
+Our games are offered according to their age ratings. In Spain, FR Connect and voluntary consent-based processing are not available to children under 14 without verifiable authorisation from a parent or guardian. If we cannot offer a suitable authorisation mechanism, those features remain disabled. Parents or guardians may contact legal@flatreality.eu to request review or deletion.
+
+In other countries, we apply the local age of digital consent and contract rules. We do not knowingly collect a child’s data in breach of those rules.
+
+7. RECIPIENTS AND PROVIDERS
+
+We share data only as necessary with:
+
+- Microsoft Corporation and affiliates: Xbox Network, Microsoft GDK, PlayFab and Azure for identity, authentication, achievements, infrastructure and cloud/cross-save.
+- Unity Technologies and affiliates: game engine, diagnostics and Unity Analytics when enabled.
+- Valve, Microsoft and other platform operators: licences, distribution, purchases, achievements, cloud and security.
+- Supabase, Inc. and its infrastructure providers: database, storage and delivery for FR Channel and configured web services.
+- GitHub, Inc.: website hosting and delivery through GitHub Pages.
+- Google LLC: Google Tag Manager and Google Analytics subject to user choices.
+- Microsoft Clarity: experience and session measurement subject to consent.
+- legal/accounting advisers, authorities and legitimate acquirers where necessary and permitted by law.
+
+Providers may act as processors, subprocessors or independent controllers depending on the service. Their independent operations are governed by their own notices.
+
+8. INTERNATIONAL TRANSFERS
+
+Some recipients operate outside the European Economic Area. Where we transfer GDPR-protected data, we use a valid mechanism such as an adequacy decision, the EU–US Data Privacy Framework for certified entities, European Commission Standard Contractual Clauses and supplementary safeguards where required. You may request information about the applicable mechanism at legal@flatreality.eu.
+
+9. RETENTION
+
+- Voluntary game and web analytics: up to 12 months, unless a shorter setting is stated at collection.
+- FR Connect, progress and cloud saves: while the account remains connected or until a valid deletion/disconnection request, subject to legal obligations and platform limitations.
+- Essential security and diagnostic logs: for the minimum documented period needed to investigate incidents and maintain the service; reviewed periodically and not repurposed for voluntary analytics.
+- Enquiries: while needed to reply and afterwards for applicable claim periods.
+- Legal, tax and transaction records: for the periods required by applicable law.
+- Backups: overwritten or isolated during a limited technical period; deleted data is not restored to ordinary use.
+
+We may retain anonymised information that can no longer reasonably be linked to a person.
+
+10. SECURITY
+
+We use organisational and technical measures proportionate to risk, including minimisation, access controls, encryption in transit, environment separation, updates and provider review. No system is completely secure. If a breach creates a legally reportable risk, we will notify the authority and affected people as required.
+
+11. YOUR EEA, UK AND SIMILAR RIGHTS
+
+Depending on applicable law, you may request access, correction, deletion, restriction, portability, objection and withdrawal of consent. You may also object to decisions based solely on automated processing that have significant legal effects; we do not currently make such decisions about players.
+
+Send requests to legal@flatreality.eu and identify the product and identifiers needed to locate the data. We may request proportionate, secure verification. We will respond within the legal deadline. In Spain, you may complain to the Agencia Española de Protección de Datos (AEPD): https://www.aepd.es.
+
+Deleting FR Connect or cloud saves may be irreversible. Before carrying out deletion, we will verify identity and explain the scope. Data controlled directly by Xbox, Steam or another platform may need to be requested from that operator.
+
+12. CALIFORNIA AND OTHER U.S. STATE NOTICE
+
+During the preceding 12 months we may have processed these categories, depending on the product used: identifiers; Internet or electronic activity; approximate geolocation; commercial information; audio/visual information supplied in communications; and limited inferences about performance or use. Sources are the user, device, connected platforms and providers. Purposes and recipients are described in sections 3, 4 and 7.
+
+We do not sell personal data for money. Google Analytics, Clarity or future advertising tags may be considered “sharing”, targeted advertising or cross-context behavioural advertising under some laws if enabled; they remain off until the relevant choice is made. Opt out through “Cookie settings” and, where applicable, a recognised signal such as Global Privacy Control.
+
+Covered residents may request knowledge/access, correction, deletion, a copy, and opt-out of sale, sharing, targeted advertising or certain profiling, and may appeal a refusal where the law provides. We do not discriminate for exercising rights. Send requests to legal@flatreality.eu. An authorised agent must show authority and we may verify directly with the user.
+
+We do not have actual knowledge that we sell or share for behavioural advertising personal data of people under 16.
+
+13. EXTERNAL LINKS AND SERVICES
+
+Our products may link to Xbox, Steam, Discord, social networks or other services. When opened, the third party may process data under its own terms. Review its privacy notice before using the external service.
+
+14. CHANGES
+
+We publish the current version and date at https://flatreality.eu/privacy-policy. Editorial changes may be published without a new consent request. Where a material change alters purposes, categories or legal bases, we will provide prominent notice and obtain new consent when required. We will keep a reasonable archive of earlier versions.
+
+15. CONTACT
+
+Controller: ANDREI PUCHKOV [UPDATE IF APPLICABLE], trading as FLAT REALITY ENTERTAINMENT GROUP
+NIF/NIE: [NIF/NIE]
+Professional address: [FULL PROFESSIONAL ADDRESS]
+Privacy and legal email: legal@flatreality.eu
+Website: https://flatreality.eu
+
+

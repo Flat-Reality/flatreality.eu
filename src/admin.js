@@ -1,6 +1,6 @@
 import { CHANNEL_ADMIN_ENDPOINT } from './lib/supabase-config.js'
+import { supabase } from './lib/supabase.js'
 
-let adminPassword = ''
 let editor
 let currentArticle = null
 let cover = { url: '', path: '' }
@@ -22,9 +22,12 @@ function updatePublicationMode() {
 }
 
 async function adminRequest(body, options = {}) {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.access_token) throw new Error('Your Microsoft session has expired. Sign in again.')
+  const providerHeaders = session.provider_token ? { 'x-microsoft-provider-token': session.provider_token } : {}
   const response = await fetch(CHANNEL_ADMIN_ENDPOINT, {
     method: 'POST',
-    headers: { 'x-channel-password': adminPassword, ...(options.headers || {}) },
+    headers: { Authorization: `Bearer ${session.access_token}`, ...providerHeaders, ...(options.headers || {}) },
     body: options.raw ? body : JSON.stringify(body)
   })
   const result = await response.json().catch(() => ({}))
@@ -224,23 +227,34 @@ async function openWorkspace() {
 }
 
 export async function initAdmin() {
-  const login = document.querySelector('[data-admin-login-form]')
-  login.addEventListener('submit', async event => {
-    event.preventDefault()
-    const button = login.querySelector('button')
+  const login = document.querySelector('[data-admin-login]')
+  const button = document.querySelector('[data-microsoft-signin]')
+  const errorOutput = document.querySelector('[data-login-error]')
+
+  button.addEventListener('click', async () => {
     button.disabled = true
-    button.textContent = 'Opening…'
-    adminPassword = login.elements.password.value
-    try {
-      await adminRequest({ action: 'login' })
-      login.reset()
-      await openWorkspace()
-    } catch (error) {
-      adminPassword = ''
-      document.querySelector('[data-login-error]').textContent = error.message
-    } finally {
+    errorOutput.textContent = ''
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'azure',
+      options: {
+        scopes: 'email User.Read',
+        redirectTo: `${location.origin}/admin/`
+      }
+    })
+    if (error) {
+      errorOutput.textContent = error.message
       button.disabled = false
-      button.textContent = 'Enter workspace'
     }
   })
+
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) return
+  try {
+    await adminRequest({ action: 'login' })
+    await openWorkspace()
+  } catch (error) {
+    await supabase.auth.signOut()
+    login.hidden = false
+    errorOutput.textContent = error.message
+  }
 }

@@ -57,31 +57,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050505" />
     <meta name="description" content="Flat Reality is an independent European game studio creating expressive games that leave a lasting impression." />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="Flat Reality" />
     <meta property="og:title" content="Flat Reality - Games Should Say Something" />
     <meta property="og:description" content="Independent, expressive games that leave a lasting impression." />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Flat Reality" />
+    <meta property="og:locale" content="en_GB" />
     <meta property="og:url" content="https://flatreality.eu/" />
     <meta property="og:image" content="https://flatreality.eu/assets/images/FlatRealityCover.png" />
     <meta property="og:image:width" content="1672" />
     <meta property="og:image:height" content="941" />
     <meta property="og:image:alt" content="Flat Reality" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Flat Reality - Games Should Say Something" />
+    <meta name="twitter:description" content="Independent, expressive games that leave a lasting impression." />
     <meta name="twitter:image" content="https://flatreality.eu/assets/images/FlatRealityCover.png" />
     <meta name="twitter:image:alt" content="Flat Reality" />
     <link rel="canonical" href="https://flatreality.eu/" />
+    <link rel="alternate" type="application/rss+xml" title="Flat Reality Channel" href="https://flatreality.eu/feed.xml" />
+    <link rel="alternate" type="application/feed+json" title="Flat Reality Channel" href="https://flatreality.eu/feed.json" />
     <link rel="preload" as="image" href="/assets/logos/LogoBlackTransparent.png" />
     <link rel="icon" type="image/jpeg" href="/assets/logos/PartnersLogo.jpg" />
     <link rel="apple-touch-icon" href="/assets/logos/PartnersLogo.jpg" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Flat Reality",
-        "url": "https://flatreality.eu/",
-        "logo": "https://flatreality.eu/assets/logos/StudioLogo.png",
-        "description": "Independent European game studio creating expressive games that leave a lasting impression.",
-        "sameAs": ["https://www.linkedin.com/company/flatreality/"]
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://flatreality.eu/#organization",
+            "name": "Flat Reality",
+            "url": "https://flatreality.eu/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://flatreality.eu/assets/logos/StudioLogo.png"
+            },
+            "description": "Independent European game studio creating expressive games that leave a lasting impression.",
+            "sameAs": [
+              "https://www.linkedin.com/company/flatreality/",
+              "https://www.instagram.com/flat.reality/",
+              "https://bsky.app/profile/flatreality.bsky.social",
+              "https://www.tiktok.com/@flat.reality",
+              "https://www.youtube.com/channel/UCLTCUyuodEMx6v9jFJLUylg",
+              "https://www.threads.com/@flat.reality"
+            ]
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://flatreality.eu/#website",
+            "url": "https://flatreality.eu/",
+            "name": "Flat Reality",
+            "alternateName": ["FR", "flatreality.eu"],
+            "publisher": { "@id": "https://flatreality.eu/#organization" },
+            "inLanguage": "en"
+          },
+          {
+            "@type": "ItemList",
+            "name": "Flat Reality website sections",
+            "itemListElement": [
+              { "@type": "SiteNavigationElement", "position": 1, "name": "Studio", "url": "https://flatreality.eu/" },
+              { "@type": "SiteNavigationElement", "position": 2, "name": "Games", "url": "https://flatreality.eu/games/" },
+              { "@type": "SiteNavigationElement", "position": 3, "name": "FR Channel", "url": "https://flatreality.eu/channel/" },
+              { "@type": "SiteNavigationElement", "position": 4, "name": "FR Partners", "url": "https://flatreality.eu/partners/" }
+            ]
+          }
+        ]
       }
     </script>
     <title>Flat Reality - Games Should Say Something</title>
