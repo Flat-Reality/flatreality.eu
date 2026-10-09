@@ -17,6 +17,22 @@ const allowedServices = new Set([
   "something-else",
 ]);
 
+const allowedRetainerServices = new Set([
+  "custom-team",
+  "concept-artist", "ui-artist", "unity-developer", "game-designer", "narrative-designer",
+  "sound-designer", "producer", "accessibility-consultant", "art-production-pod",
+  "gameplay-systems-pod", "narrative-design-pod", "cross-disciplinary-team",
+  "art-production-capacity", "flexible-unity-capacity", "design-capacity", "audio-capacity",
+  "production-capacity", "inclusive-capacity",
+]);
+const specialistRetainerServices = new Set(["concept-artist", "ui-artist", "unity-developer", "game-designer", "narrative-designer", "sound-designer", "producer", "accessibility-consultant"]);
+const allowedRetainerModes = new Set(["quick", "custom"]);
+const allowedExperience = new Set(["junior", "middle", "senior", "lead", "auto"]);
+const allowedEngagement = new Set(["dedicated-specialist", "production-team", "flexible-capacity"]);
+const allowedCapacity = new Set(["20 hours / month", "40 hours / month", "80 hours / month", "160 hours / month", "Custom"]);
+const allowedDuration = new Set(["1 month", "3 months", "6 months", "Custom"]);
+const allowedStart = new Set(["As Soon As Possible", "Within a Month", "Flexible / Not Sure Yet", "Specific Date"]);
+
 const allowedCollaboration = new Set(["One-time Project", "Production Module", "Ongoing Support", "Not Sure Yet"]);
 const allowedStages = new Set(["Concept / Idea", "Prototype", "In Production", "Released / Live"]);
 const allowedBudgets = new Set(["Under €500", "€500–€2,000", "€2,000–€10,000", "€10,000+", "Not Sure Yet"]);
@@ -69,6 +85,7 @@ Deno.serve(async (request: Request) => {
   if (stringValue(payload.company_website, 200)) return json(origin, { saved: false, error: "Unable to submit this request." }, 400);
 
   const name = stringValue(payload.name, 120);
+  const inquiryType = stringValue(payload.inquiry_type, 40) || "outsourcing";
   const organization = stringValue(payload.organization, 160);
   const email = stringValue(payload.email, 254).toLowerCase();
   const projectUrl = stringValue(payload.project_url, 500);
@@ -80,13 +97,44 @@ Deno.serve(async (request: Request) => {
   const sourcePage = stringValue(payload.source_page, 120) || "Flat Reality Partners / Outsourcing";
   const privacyNoticeVersion = stringValue(payload.privacy_notice_version, 40);
   const marketingConsent = payload.marketing_consent === true;
-  const selectedServices = [...new Set(Array.isArray(payload.selected_services) ? payload.selected_services.filter(value => typeof value === "string" && allowedServices.has(value)) : [])];
+  const allowedSelection = inquiryType === "retainer_plus" ? allowedRetainerServices : allowedServices;
+  const selectedServices = [...new Set(Array.isArray(payload.selected_services) ? payload.selected_services.filter(value => typeof value === "string" && allowedSelection.has(value)) : [])];
+  const retainerConfiguration = payload.retainer_configuration && typeof payload.retainer_configuration === "object" && !Array.isArray(payload.retainer_configuration)
+    ? payload.retainer_configuration as Record<string, unknown>
+    : {};
 
   if (name.length < 2 || projectDescription.length < 10 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json(origin, { saved: false, error: "Please complete the required contact fields." }, 422);
   }
-  if (!selectedServices.length || !allowedCollaboration.has(collaborationModel) || !allowedStages.has(projectStage) || !allowedBudgets.has(budgetRange) || !allowedTimelines.has(timeline)) {
+  if (!["outsourcing", "retainer_plus"].includes(inquiryType) || !selectedServices.length || !allowedCollaboration.has(collaborationModel) || !allowedStages.has(projectStage) || !allowedBudgets.has(budgetRange) || !allowedTimelines.has(timeline)) {
     return json(origin, { saved: false, error: "Please complete every project selection." }, 422);
+  }
+  if (inquiryType === "retainer_plus") {
+    const mode = stringValue(retainerConfiguration.mode, 20);
+    const engagement = stringValue(retainerConfiguration.engagement_model, 40);
+    const monthlyCapacity = stringValue(retainerConfiguration.monthly_capacity, 80);
+    const customCapacity = stringValue(retainerConfiguration.custom_monthly_capacity, 120);
+    const duration = stringValue(retainerConfiguration.duration, 80);
+    const customDuration = stringValue(retainerConfiguration.custom_duration, 120);
+    const preferredStart = stringValue(retainerConfiguration.preferred_start, 80);
+    const specificStartDate = stringValue(retainerConfiguration.specific_start_date, 20);
+    const offeringIds = Array.isArray(retainerConfiguration.offering_ids) ? retainerConfiguration.offering_ids : [];
+    const levels = retainerConfiguration.experience_levels && typeof retainerConfiguration.experience_levels === "object" && !Array.isArray(retainerConfiguration.experience_levels)
+      ? retainerConfiguration.experience_levels as Record<string, unknown>
+      : {};
+    const quantities = retainerConfiguration.offering_quantities && typeof retainerConfiguration.offering_quantities === "object" && !Array.isArray(retainerConfiguration.offering_quantities)
+      ? retainerConfiguration.offering_quantities as Record<string, unknown>
+      : {};
+    const validLevels = Object.entries(levels).every(([id, level]) => allowedRetainerServices.has(id) && typeof level === "string" && allowedExperience.has(level));
+    const validQuantities = Object.entries(quantities).every(([id, quantity]) => specialistRetainerServices.has(id) && Number.isInteger(quantity) && Number(quantity) >= 1 && Number(quantity) <= 10);
+    const validOfferings = offeringIds.every(id => typeof id === "string" && allowedRetainerServices.has(id));
+    const validCustom = monthlyCapacity !== "Custom" || customCapacity.length > 0;
+    const validDuration = duration !== "Custom" || customDuration.length > 0;
+    const validDate = preferredStart !== "Specific Date" || /^\d{4}-\d{2}-\d{2}$/.test(specificStartDate);
+    if (!allowedRetainerModes.has(mode) || !allowedEngagement.has(engagement) || !allowedCapacity.has(monthlyCapacity) || !allowedDuration.has(duration) || !allowedStart.has(preferredStart) || !validOfferings || !validLevels || !validQuantities || !validCustom || !validDuration || !validDate) {
+      return json(origin, { saved: false, error: "Please complete the Retainer Plus configuration." }, 422);
+    }
+    if (mode === "quick" && !offeringIds.length) return json(origin, { saved: false, error: "Choose at least one retainer." }, 422);
   }
   if (payload.privacy_acknowledged !== true || !privacyNoticeVersion) {
     return json(origin, { saved: false, error: "Please review the privacy notice before submitting." }, 422);
@@ -101,7 +149,11 @@ Deno.serve(async (request: Request) => {
   }
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  let serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+  try {
+    const secretKeys = JSON.parse(Deno.env.get("SUPABASE_SECRET_KEYS") || "{}");
+    serviceKey = secretKeys.default || serviceKey;
+  } catch {}
   if (!supabaseUrl || !serviceKey) return json(origin, { saved: false, error: "Submission service is unavailable." }, 503);
   const supabase = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false, autoRefreshToken: false } });
 
@@ -112,6 +164,7 @@ Deno.serve(async (request: Request) => {
   if (!allowed) return json(origin, { saved: false, error: "Too many attempts. Please try again later." }, 429);
 
   const { data, error } = await supabase.from("partner_inquiries").insert({
+    inquiry_type: inquiryType,
     name,
     organization,
     email,
@@ -127,6 +180,7 @@ Deno.serve(async (request: Request) => {
     privacy_notice_version: privacyNoticeVersion,
     marketing_consent: marketingConsent,
     marketing_consent_at: marketingConsent ? new Date().toISOString() : null,
+    retainer_configuration: inquiryType === "retainer_plus" ? retainerConfiguration : {},
   }).select("id, reference").single();
 
   if (error || !data) {

@@ -1,6 +1,7 @@
 import { PARTNERS_INQUIRY_ENDPOINT, SUPABASE_PUBLISHABLE_KEY } from './lib/supabase-config.js'
 import { additionalServices, allServices, budgetRanges, collaborationModels, projectStages, services, timelines } from './partners-outsourcing-data.js'
 import { clearInquiryDraft, emptyInquiry, getInquiryDraft, hasMeaningfulDraft, saveInquiryDraft } from './partners-inquiry-store.js'
+import { saveContactProfile } from './retainer-plus-store.js'
 
 let controller
 const arrow = '<span aria-hidden="true">→</span>'
@@ -156,6 +157,7 @@ export function initInquiry() {
       })
       const result = await response.json().catch(() => ({}))
       if (!response.ok || !result.saved || !result.inquiry_id) throw new Error(result.error || 'The inquiry could not be saved. Please try again.')
+      saveContactProfile({ name: state.name, organization: state.organization, email: state.email, projectUrl: state.projectUrl })
       clearInquiryDraft()
       shell.hidden = true
       success.hidden = false

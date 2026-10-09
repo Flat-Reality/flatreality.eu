@@ -1,4 +1,7 @@
-const KEY = 'fr_partners_inquiry_draft_v1'
+import { getContactProfile } from './retainer-plus-store.js'
+
+const KEY = 'fr_outsourcing_inquiry_draft_v1'
+const LEGACY_KEY = 'fr_partners_inquiry_draft_v1'
 const VERSION = 1
 const MAX_AGE = 30 * 24 * 60 * 60 * 1000
 let memoryDraft = null
@@ -6,6 +9,7 @@ let memoryDraft = null
 const clean = value => typeof value === 'string' ? value : ''
 
 export function emptyInquiry() {
+  const profile = getContactProfile()
   return {
     version: VERSION,
     selectedServices: [],
@@ -14,10 +18,10 @@ export function emptyInquiry() {
     budgetRange: 'Not Sure Yet',
     timeline: '',
     projectDescription: '',
-    name: '',
-    organization: '',
-    email: '',
-    projectUrl: '',
+    name: profile.name,
+    organization: profile.organization,
+    email: profile.email,
+    projectUrl: profile.projectUrl,
     privacyAcknowledged: false,
     marketingConsent: false,
     currentStep: 1,
@@ -27,6 +31,10 @@ export function emptyInquiry() {
 
 export function getInquiryDraft() {
   try {
+    if (!localStorage.getItem(KEY) && localStorage.getItem(LEGACY_KEY)) {
+      localStorage.setItem(KEY, localStorage.getItem(LEGACY_KEY))
+      localStorage.removeItem(LEGACY_KEY)
+    }
     const parsed = JSON.parse(localStorage.getItem(KEY) || 'null')
     if (!parsed || parsed.version !== VERSION || Date.now() - Number(parsed.updatedAt || 0) > MAX_AGE) {
       localStorage.removeItem(KEY)
