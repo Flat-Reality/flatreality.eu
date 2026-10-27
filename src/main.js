@@ -177,6 +177,9 @@ function adminPage() {
 
 function applySeo({title,description,canonical,robots='index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1',image,imageAlt='Flat Reality',type='website',structuredData=[]}) {
   document.title = title
+  const partnersIcon = /^\/partners(?:\/|$)/i.test(location.pathname)
+  const iconHref = partnersIcon ? '/assets/logos/PartnersLogo.jpg' : '/assets/logos/StudioLogo.png'
+  document.querySelectorAll('link[rel="icon"],link[rel="apple-touch-icon"]').forEach(node => { node.href = iconHref; if (node.rel === 'icon') node.type = partnersIcon ? 'image/jpeg' : 'image/png' })
   const socialImage = image || 'https://flatreality.eu/assets/images/FlatRealityCover.png'
   const set = (selector, key, name, value) => { let node=document.head.querySelector(selector);if(!node){node=document.createElement('meta');node.setAttribute(key,name);document.head.append(node)}node.setAttribute('content',value) }
   set('meta[name="description"]','name','description',description)

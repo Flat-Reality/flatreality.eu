@@ -18,7 +18,7 @@ function offeringCard(item, selected, quantity = 1) {
 const faq = [
   ["What's the difference between Outsourcing and Retainer Plus?", 'Outsourcing is designed around defined project deliverables, while Retainer Plus focuses on reserving ongoing production capacity.'],
   ['Can I work with more than one specialization?', 'Yes. You can combine multiple development areas in a single request.'],
-  ['Can Flat Reality recommend the team composition?', 'Yes. Our team can review your requirements and propose a suitable combination of specialists.'],
+  ['Can Flat Reality Partners recommend the team composition?', 'Yes. Our team can review your requirements and propose a suitable combination of specialists.'],
   ['Is account management included?', 'Yes. Account management and production coordination are included in the engagement model, subject to the agreed scope.'],
   ['What happens if a specialist becomes unavailable?', 'Flat Reality coordinates continuity and replacement arrangements according to the terms of your agreement.'],
   ['Are prices fixed?', 'No public rates are displayed. We prepare individual proposals based on requested services, capacity, duration and project requirements.'],

@@ -1,11 +1,10 @@
 FLAT REALITY PRIVACY POLICY
 
-DRAFT — DO NOT PUBLISH UNTIL ALL BRACKETED DETAILS ARE COMPLETED
 Version: 1.0
-Effective date: [PUBLICATION DATE]
-Last updated: [PUBLICATION DATE]
+Effective date: 9 October 2026
+Last updated: 20 October 2026
 
-This Policy explains how ANDREI PUCHKOV [REPLACE WITH THE THEN-CURRENT LEGAL NAME IF IT CHANGES BEFORE PUBLICATION], a self-employed individual established in Spain, holding tax identification number [NIF/NIE], with professional address at [FULL PROFESSIONAL ADDRESS], trading as FLAT REALITY ENTERTAINMENT GROUP (“Flat Reality”, “we”, “us”), processes personal data.
+This Policy explains how ANDREI PUCHKOV, a self-employed individual established in Spain, holding tax identification number NIE Z3464639Q, with professional address at Calle Rio Tietar, 10, 45007, Spain, trading as FLAT REALITY ENTERTAINMENT GROUP (“Flat Reality”, “we”, “us”), processes personal data.
 
 We are the controller for the processing described here. Contact us at legal@flatreality.eu. We have not appointed a data protection officer because we are not currently required to do so; we will update this Policy if that changes.
 
@@ -35,11 +34,11 @@ A platform, store, social network or external site may process data as an indepe
 
 We may process IP address, pseudonymous technical identifiers, platform, device model or characteristics, operating system, language, Game version, timestamps, security logs, error information and minimum diagnostics. We do not intend to use this layer to build advertising profiles or analyse individual narrative choices.
 
-3.2. FR Connect, Xbox and cloud services
+3.2. FR Connect, XBOX® and cloud services
 
-When you activate FR Connect we may receive or generate Xbox user ID/XUID, gamertag, avatar or avatar URL, PlayFab ID where PlayFab is enabled in that product build, linked platform identifiers, sign-in state, achievements, progress, save files, synchronisation metadata, quota, last-modified time and logs needed to provide and protect the service.
+When you activate FR Connect we may receive or generate XBOX® user ID/XUID, gamertag, avatar or avatar URL, PlayFab ID where PlayFab is enabled in that product build, linked platform identifiers, sign-in state, achievements, progress, save files, synchronisation metadata, quota, last-modified time and logs needed to provide and protect the service.
 
-We do not receive your Microsoft/Xbox password. Authentication uses Microsoft interfaces. A product build that does not include PlayFab will not send data to PlayFab merely because that provider is listed in this Policy.
+We do not receive your Microsoft/XBOX® password. Authentication uses Microsoft interfaces. A product build that does not include PlayFab will not send data to PlayFab merely because that provider is listed in this Policy.
 
 3.3. Voluntary game analytics
 
@@ -94,7 +93,7 @@ In other countries, we apply the local age of digital consent and contract rules
 
 We share data only as necessary with:
 
-- Microsoft Corporation and affiliates: Xbox Network, Microsoft GDK, PlayFab and Azure for identity, authentication, achievements, infrastructure and cloud/cross-save.
+- Microsoft Corporation and affiliates: XBOX® Network, Microsoft GDK, PlayFab and Azure for identity, authentication, achievements, infrastructure and cloud/cross-save.
 - Unity Technologies and affiliates: game engine, diagnostics and Unity Analytics when enabled.
 - Valve, Microsoft and other platform operators: licences, distribution, purchases, achievements, cloud and security.
 - Supabase, Inc. and its infrastructure providers: database, storage and delivery for FR Channel and configured web services.
@@ -111,7 +110,8 @@ Some recipients operate outside the European Economic Area. Where we transfer GD
 
 9. RETENTION
 
-- Voluntary game and web analytics: up to 12 months, unless a shorter setting is stated at collection.
+- Voluntary game analytics using Unity Analytics: raw event data is retained for 13 months and then automatically deleted. Dashboard metrics and player profiles are retained until you request deletion or Flat Reality initiates their deletion. You can disable analytics and request deletion through the Game's Settings; disabling analytics alone does not delete previously collected data. A shorter retention period applies where specifically configured and stated at collection.
+- Voluntary web analytics: up to 12 months, unless a shorter setting is stated at collection.
 - FR Connect, progress and cloud saves: while the account remains connected or until a valid deletion/disconnection request, subject to legal obligations and platform limitations.
 - Essential security and diagnostic logs: for the minimum documented period needed to investigate incidents and maintain the service; reviewed periodically and not repurposed for voluntary analytics.
 - Enquiries: while needed to reply and afterwards for applicable claim periods.
@@ -130,7 +130,7 @@ Depending on applicable law, you may request access, correction, deletion, restr
 
 Send requests to legal@flatreality.eu and identify the product and identifiers needed to locate the data. We may request proportionate, secure verification. We will respond within the legal deadline. In Spain, you may complain to the Agencia Española de Protección de Datos (AEPD): https://www.aepd.es.
 
-Deleting FR Connect or cloud saves may be irreversible. Before carrying out deletion, we will verify identity and explain the scope. Data controlled directly by Xbox, Steam or another platform may need to be requested from that operator.
+Deleting FR Connect or cloud saves may be irreversible. Before carrying out deletion, we will verify identity and explain the scope. Data controlled directly by XBOX®, Steam or another platform may need to be requested from that operator.
 
 12. CALIFORNIA AND OTHER U.S. STATE NOTICE
 
@@ -144,7 +144,7 @@ We do not have actual knowledge that we sell or share for behavioural advertisin
 
 13. EXTERNAL LINKS AND SERVICES
 
-Our products may link to Xbox, Steam, Discord, social networks or other services. When opened, the third party may process data under its own terms. Review its privacy notice before using the external service.
+Our products may link to XBOX®, Steam, Discord, social networks or other services. When opened, the third party may process data under its own terms. Review its privacy notice before using the external service.
 
 14. CHANGES
 
@@ -152,9 +152,9 @@ We publish the current version and date at https://flatreality.eu/privacy-policy
 
 15. CONTACT
 
-Controller: ANDREI PUCHKOV [UPDATE IF APPLICABLE], trading as FLAT REALITY ENTERTAINMENT GROUP
-NIF/NIE: [NIF/NIE]
-Professional address: [FULL PROFESSIONAL ADDRESS]
+Controller: ANDREI PUCHKOV, trading as FLAT REALITY ENTERTAINMENT GROUP
+NIE: Z3464639Q
+Professional address: Calle Rio Tietar, 10, 45007, Spain
 Privacy and legal email: legal@flatreality.eu
 Website: https://flatreality.eu
 

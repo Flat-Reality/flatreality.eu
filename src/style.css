@@ -197,3 +197,64 @@ body:before{display:none!important}.mobile-loader{display:none}.ext{display:inli
 .retainer-offer__actions{display:flex;align-items:flex-end;gap:12px}.retainer-offer__actions>button{min-width:170px;border:2px solid currentColor;border-radius:5px;background:transparent;color:inherit;padding:13px 18px;font:inherit;font-weight:700;cursor:pointer}.retainer-quantity{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:700}.retainer-quantity select{height:48px;min-width:116px;border:2px solid currentColor;border-radius:5px;background:#fff;color:#111;padding:0 12px;font:inherit}.retainer-offer.selected .retainer-quantity select{background:#111;color:#fff}.retainer-config-item__quantity{font-size:15px!important;color:#111!important;margin-bottom:0}.retainer-level__popover{width:380px;padding:24px}.retainer-effort-gauge{position:relative;width:230px;height:125px;margin:0 auto 24px;border:13px solid #e1e1e3;border-bottom:0;border-radius:230px 230px 0 0}.retainer-effort-gauge:before{content:"";position:absolute;inset:-13px -13px auto;height:125px;border:13px solid #fff;border-bottom:0;border-radius:230px 230px 0 0;clip-path:polygon(0 0,calc((var(--effort) + 1) * 25%) 0,calc((var(--effort) + 1) * 25%) 100%,0 100%);opacity:.95}.retainer-effort-gauge>i{position:absolute;left:50%;bottom:-3px;width:4px;height:88px;background:#fff;border-radius:4px;transform-origin:50% 100%;transform:translateX(-50%) rotate(calc(-67deg + var(--effort) * 44.6deg));transition:transform .25s var(--ease)}.retainer-effort-gauge>i:after{content:"";position:absolute;left:50%;bottom:-7px;width:18px;height:18px;border-radius:50%;background:#fff;transform:translateX(-50%)}.retainer-effort-gauge strong{position:absolute;left:0;right:0;bottom:9px;text-align:center;font-size:25px}.retainer-effort-gauge small{position:absolute;left:0;right:0;bottom:-25px;text-align:center;color:#aaa}.retainer-effort-gauge.auto>i{opacity:.25}.retainer-level__popover>input[type=range]{display:block;width:100%;margin:34px 0 8px;accent-color:#fff;cursor:pointer}.retainer-effort-labels{display:grid;grid-template-columns:repeat(4,1fr);font-size:11px;color:#aaa;margin-bottom:22px}.retainer-effort-labels span{text-align:center}.retainer-effort-labels span:first-child{text-align:left}.retainer-effort-labels span:last-child{text-align:right}.retainer-level__popover .retainer-level__auto{border:1px solid #ffffff55;border-radius:6px;text-align:center}.retainer-level__popover .retainer-level__auto.selected{background:#fff;color:#111}.retainer-level__popover .retainer-level__auto:hover{border-color:#fff}
 
 @media(max-width:800px){.retainer-offer__actions{align-items:stretch;flex-direction:column}.retainer-offer__actions>button{width:100%}.retainer-quantity select{width:100%}.retainer-level__popover{width:auto}.retainer-effort-gauge{width:210px;height:114px}.retainer-effort-gauge:before{height:114px}}
+
+/* Retainer flow clarity, compact experience control and page motion */
+.retainer-engagement{margin-top:52px!important}
+.inquiry-options--engagement{grid-template-columns:repeat(3,minmax(0,1fr))}
+.inquiry-option--engagement{min-height:156px;align-items:flex-start}
+.inquiry-option--engagement>span{display:flex;flex-direction:column;gap:12px}
+.inquiry-option--engagement b{font-size:21px}
+.inquiry-option--engagement small{font-size:14px;line-height:1.4;font-weight:400;color:#666}
+.inquiry-option--engagement.selected small{color:#ccc}
+.retainer-mode-heading{font-size:32px;margin:72px 0 28px}
+.retainer-quick-panel{margin-top:42px;padding:32px;border:1px solid #d7d7d7;border-radius:16px;background:#fafafa}
+.retainer-quick-panel>header h2{font-size:28px;margin:0 0 8px}
+.retainer-quick-panel>header p{margin:0;color:#666;line-height:1.4}
+.retainer-quick-list{margin-top:26px}
+.retainer-quick-empty{grid-column:1/-1;margin:0;color:#666}
+.retainer-custom-team--intro{margin-top:42px}
+
+.retainer-level__popover{right:0;top:calc(100% + 10px);width:330px;padding:20px;background:#fff;color:#111;border:1px solid #d8d8dc;border-radius:16px;box-shadow:0 22px 64px #00000024;animation:retainerPopoverIn .22s var(--ease) both}
+.retainer-effort-gauge{position:relative;width:156px;height:78px;margin:2px auto 26px;border:8px solid #dedee2;border-bottom:0;border-radius:156px 156px 0 0}
+.retainer-effort-gauge:before{display:none}
+.retainer-effort-gauge>i{position:absolute;left:50%;bottom:-2px;width:3px;height:54px;background:#111;border-radius:4px;transform-origin:50% 100%;transform:translateX(-50%) rotate(calc(-67deg + var(--effort) * 44.6deg));transition:transform .24s var(--ease),opacity .2s}
+.retainer-effort-gauge>i:after{left:50%;bottom:-6px;width:14px;height:14px;background:#111}
+.retainer-effort-gauge strong{bottom:5px;font-size:18px}
+.retainer-effort-gauge small{bottom:-21px;color:#777;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.retainer-effort-gauge.auto>i{opacity:.18}
+.retainer-level__popover>input[type=range]{appearance:none;display:block;width:100%;height:24px;margin:28px 0 5px;background:transparent;cursor:pointer}
+.retainer-level__popover>input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:999px;background:#d7d7dc}
+.retainer-level__popover>input[type=range]::-webkit-slider-thumb{appearance:none;width:20px;height:20px;margin-top:-7.5px;border:3px solid #fff;border-radius:50%;background:#111;box-shadow:0 1px 6px #0005}
+.retainer-level__popover>input[type=range]::-moz-range-track{height:5px;border:0;border-radius:999px;background:#d7d7dc}
+.retainer-level__popover>input[type=range]::-moz-range-thumb{width:16px;height:16px;border:3px solid #fff;border-radius:50%;background:#111;box-shadow:0 1px 6px #0005}
+.retainer-effort-labels{font-size:10px;color:#666;margin-bottom:16px}
+.retainer-level__popover .retainer-level__auto{min-height:42px;border:1px solid #cfcfd4;border-radius:9px;background:#f5f5f7;color:#111;text-align:center}
+.retainer-level__popover .retainer-level__auto.selected{background:#111;color:#fff;border-color:#111}
+.retainer-level__popover .retainer-level__auto:hover{border-color:#111}
+@keyframes retainerPopoverIn{from{opacity:0;transform:translateY(-7px) scale(.98)}to{opacity:1;transform:none}}
+
+.inquiry-step--entering{animation:inquiryStepIn .46s var(--ease) both}
+.inquiry-step--entering .retainer-mode-grid>button,.inquiry-step--entering .inquiry-option,.inquiry-step--entering .retainer-config-item{animation:inquiryCardIn .5s var(--ease) both}
+.inquiry-step--entering .retainer-mode-grid>button:nth-child(2),.inquiry-step--entering .inquiry-option:nth-child(2),.inquiry-step--entering .retainer-config-item:nth-child(2){animation-delay:.06s}
+.inquiry-step--entering .inquiry-option:nth-child(3),.inquiry-step--entering .retainer-config-item:nth-child(3){animation-delay:.12s}
+@keyframes inquiryStepIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes inquiryCardIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+.retainer-plus .retainer-hero,.retainer-plus .retainer-section,.outsourcing-page .outsourcing-hero,.outsourcing-page .outsourcing-section,.outsourcing-page .outsourcing-tech{opacity:0;transform:translateY(34px);transition:opacity .72s var(--ease),transform .72s var(--ease)}
+.retainer-plus .retainer-hero.in,.retainer-plus .retainer-section.in,.outsourcing-page .outsourcing-hero.in,.outsourcing-page .outsourcing-section.in,.outsourcing-page .outsourcing-tech.in{opacity:1;transform:none}
+.retainer-plus .retainer-hero>*,.outsourcing-page .outsourcing-hero>div{transition:opacity .82s .12s var(--ease),transform .82s .12s var(--ease)}
+.retainer-plus .retainer-hero:not(.in)>*,.outsourcing-page .outsourcing-hero:not(.in)>div{opacity:0;transform:translateY(28px)}
+
+@media(max-width:800px){
+  .inquiry-options--engagement{grid-template-columns:1fr}
+  .inquiry-option--engagement{min-height:122px}
+  .retainer-mode-heading{font-size:27px;margin-top:56px}
+  .retainer-quick-panel{padding:22px 18px}
+  .retainer-level__popover{left:16px;right:16px;bottom:16px;top:auto;width:auto;padding:20px;border-radius:18px}
+  .retainer-effort-gauge{width:150px;height:75px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .retainer-plus .retainer-hero,.retainer-plus .retainer-section,.outsourcing-page .outsourcing-hero,.outsourcing-page .outsourcing-section,.outsourcing-page .outsourcing-tech{opacity:1;transform:none;transition:none}
+  .inquiry-step--entering,.inquiry-step--entering .retainer-mode-grid>button,.inquiry-step--entering .inquiry-option,.inquiry-step--entering .retainer-config-item,.retainer-level__popover{animation:none}
+}

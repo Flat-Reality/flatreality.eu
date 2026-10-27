@@ -180,6 +180,8 @@ function renderRoute(route) {
   const image = absoluteUrl(route.image) || defaultImage
   const schemas = [route.schema, breadcrumbSchema(route.path, route.title)].filter(Boolean)
   let html = template
+    .replace(/<link rel="icon"[^>]*>/, `<link rel="icon" type="${/^partners(?:\/|$)/.test(route.path) ? 'image/jpeg' : 'image/png'}" href="/assets/logos/${/^partners(?:\/|$)/.test(route.path) ? 'PartnersLogo.jpg' : 'StudioLogo.png'}" />`)
+    .replace(/<link rel="apple-touch-icon"[^>]*>/, `<link rel="apple-touch-icon" href="/assets/logos/${/^partners(?:\/|$)/.test(route.path) ? 'PartnersLogo.jpg' : 'StudioLogo.png'}" />`)
     .replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(route.title)}</title>`)
     .replace(/<meta name="description" content="[^"]*"\s*\/>/, `<meta name="description" content="${escapeHtml(truncate(route.description))}" />`)
     .replace(/<meta name="robots" content="[^"]*"\s*\/>/, `<meta name="robots" content="${robots}" />`)
