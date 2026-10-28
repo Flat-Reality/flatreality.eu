@@ -3,12 +3,24 @@ const consented = () => { try { return JSON.parse(localStorage.getItem('fr-cooki
 let visit
 let lastActivity = performance.now()
 let lastTick = performance.now()
+let googleReady = false
+function ensureGoogle() {
+  if (googleReady || !consented() || /^\/admin(?:\/|$)/.test(location.pathname)) return
+  googleReady=true
+  const id='G-XDPMGK17RQ'
+  window.dataLayer=window.dataLayer||[]
+  window.gtag=window.gtag||function(){window.dataLayer.push(arguments)}
+  window.gtag('js',new Date())
+  window.gtag('config',id,{send_page_view:false,allow_google_signals:false,allow_ad_personalization_signals:false})
+  const script=document.createElement('script');script.async=true;script.src=`https://www.googletagmanager.com/gtag/js?id=${id}`;document.head.append(script)
+}
 const clamp = value => Math.max(0, Math.min(100, value))
 const visible = element => { const r=element.getBoundingClientRect(); return r.bottom>0 && r.top<innerHeight && r.width>0 && r.height>0 }
 const publicPath = () => location.pathname.replace(/\/$/,'') || '/'
 
 export function trackEvent(name, parameters = {}) {
   if (!consented() || /^\/admin(?:\/|$)/.test(location.pathname)) return
+  ensureGoogle()
   const params = { page_path: publicPath(), site_section: location.pathname.startsWith('/partners') ? 'partners' : location.pathname.startsWith('/channel') ? 'channel' : 'studio', ...parameters }
   window.gtag?.('event', name, params)
   window.clarity?.('event', name)
@@ -38,6 +50,7 @@ function inspect() {
     summary()
     visit={root,path,sent:new Set(),seconds:0,totalSeconds:0,depth:0,article:false,sections:new Set()}
     trackEvent('site_route_view')
+    trackEvent('page_view',{page_location:location.origin+path,page_title:document.title})
     if(path.startsWith('/partners')) trackEvent('partners_page_view')
     if(/^\/partners\/case-studies\/.+/.test(path)) trackEvent('case_study_view',{case_study:path.split('/')[3]})
   }
@@ -66,9 +79,9 @@ function inspect() {
   visit.seconds+=delta; visit.totalSeconds+=delta
   const rect=body.getBoundingClientRect()
   visit.depth=Math.max(visit.depth,clamp((innerHeight-rect.top)/rect.height*100))
-  for(const point of [25,50,75,100]) if(visit.depth>=point) once(`depth_${point}`,'channel_read_depth',{...articleParams(),milestone:point,active_seconds:Math.round(visit.totalSeconds)})
+  for(const point of [25,50,75,100]) if(visit.depth>=point) once(`depth_${point}`,'channel_read_depth',{...articleParams(),milestone:point,reading_seconds:Math.round(visit.totalSeconds)})
   for(const seconds of [15,30,60,120,300]) if(visit.totalSeconds>=seconds) once(`time_${seconds}`,'channel_read_time',{...articleParams(),milestone:seconds})
-  if(visit.depth>=95 && visit.totalSeconds>=Math.max(5,Math.min(30,visit.estimate*.5))) once('complete','channel_read_complete',{...articleParams(),active_seconds:Math.round(visit.totalSeconds)})
+  if(visit.depth>=95 && visit.totalSeconds>=Math.max(5,Math.min(30,visit.estimate*.5))) once('complete','channel_read_complete',{...articleParams(),reading_seconds:Math.round(visit.totalSeconds)})
   body.querySelectorAll('h2,h3,h4').forEach((heading,index)=>{if(visible(heading))once(`section_${index}`,'channel_section_view',{...articleParams(),section_index:index+1})})
 }
 
