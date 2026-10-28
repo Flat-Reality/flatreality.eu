@@ -1,4 +1,6 @@
 import './style.css'
+import { initAnalytics } from './analytics.js'
+initAnalytics()
 import { channelCategories, emptyChannelCard, hydrateArticle, hydrateChannelIndex, hydrateHomeChannel } from './channel.js'
 import { initOutsourcing, outsourcingPage } from './partners-outsourcing.js'
 import { initInquiry, inquiryPage } from './partners-inquiry.js'

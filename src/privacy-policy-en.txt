@@ -50,6 +50,8 @@ When you visit our sites we process HTTP requests, IP address, user-agent, times
 
 With consent, Google Analytics may process identifiers and browsing data to measure use and performance, and Microsoft Clarity may process page interactions, events, device data and session recordings using available masking controls. Google Tag Manager manages tags but does not itself authorise an optional category. FR Channel articles and assets are delivered through Supabase; access to public content may produce technical delivery logs.
 
+Website measurement may include service and case-study views, catalogue filters and selections, inquiry steps, validation events and successful submission counts. For FR Channel, it may include article identifiers, visible sections, scroll-depth milestones and estimated active reading time while the page is visible, focused and recently interacted with. These signals estimate engagement and do not prove that content was read or understood. Custom measurement events do not include inquiry text, names, email addresses or other contact-field values.
+
 3.5. Communications
 
 If you contact Flat Reality, we process your email address, name, message, attachments, message metadata and information needed to reply, verify identity or resolve a request. Do not send sensitive information that is unnecessary.
