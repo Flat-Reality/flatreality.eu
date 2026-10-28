@@ -1,5 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '../src/lib/supabase-config.js'
+import { caseStudyProjects, caseStudyPath } from '../src/case-studies-data.js'
+import { caseStudyBody, caseStudyCover, portfolioBody } from '../src/case-studies.js'
 
 const origin = 'https://flatreality.eu'
 const pagesDomain = process.env.PAGES_DOMAIN || 'flatreality.eu'
@@ -204,6 +206,10 @@ function renderRoute(route) {
   }
   return html
 }
+
+for (const project of caseStudyProjects) routes.push({ path: caseStudyPath(project.slug).replace(/^\/|\/$/g,''), title: `${project.title} — Case Study | Flat Reality Partners`, description: project.description, indexable: false, robots: 'noindex, follow', image: caseStudyCover(project) || defaultImage, body: caseStudyBody(project), schema: { '@context':'https://schema.org', '@type':'Article', headline:`${project.title} — Case Study`, description:project.description, author:{'@type':'Organization',name:'Flat Reality Partners'}, mainEntityOfPage:`${origin}${caseStudyPath(project.slug)}` } })
+
+routes.push({path:'partners/portfolio',title:'Case Study | Flat Reality Partners',description:'Explore game design, Unity development, production and key-art case studies from Flat Reality Partners.',canonical:`${origin}/partners/portfolio/`,indexable:true,image:defaultImage,body:portfolioBody()})
 
 for (const route of routes) {
   if (!route.path) {

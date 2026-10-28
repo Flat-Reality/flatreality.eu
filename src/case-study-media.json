@@ -1,0 +1,98 @@
+{
+  "the-nick": {
+    "cover": "/assets/case-studies/the-nick/cover.jpg",
+    "screenshots": [
+      "/assets/case-studies/the-nick/screenshot-1.jpg",
+      "/assets/case-studies/the-nick/screenshot-2.jpg",
+      "/assets/case-studies/the-nick/screenshot-3.jpg",
+      "/assets/case-studies/the-nick/screenshot-4.jpg",
+      "/assets/case-studies/the-nick/screenshot-5.jpg",
+      "/assets/case-studies/the-nick/screenshot-6.jpg",
+      "/assets/case-studies/the-nick/screenshot-7.jpg",
+      "/assets/case-studies/the-nick/screenshot-8.jpg",
+      "/assets/case-studies/the-nick/screenshot-9.jpg",
+      "/assets/case-studies/the-nick/screenshot-10.jpg"
+    ],
+    "trailers": [
+      {
+        "title": "THE NICK CHAPTER 1 - RELEASE TRAILER",
+        "poster": "/assets/case-studies/the-nick/trailer-1.jpg",
+        "url": "https://store.steampowered.com/app/3026070/?snr=case-study#app_trailer_257109726"
+      }
+    ],
+    "storeUrl": "https://store.steampowered.com/app/3026070/",
+    "source": "https://store.steampowered.com/app/3026070/",
+    "checkedAt": "2026-10-28"
+  },
+  "rain-heart": {
+    "cover": "/assets/case-studies/rain-heart/cover.jpg",
+    "screenshots": [
+      "/assets/case-studies/rain-heart/screenshot-1.jpg",
+      "/assets/case-studies/rain-heart/screenshot-2.jpg",
+      "/assets/case-studies/rain-heart/screenshot-3.jpg",
+      "/assets/case-studies/rain-heart/screenshot-4.jpg",
+      "/assets/case-studies/rain-heart/screenshot-5.jpg",
+      "/assets/case-studies/rain-heart/screenshot-6.jpg"
+    ],
+    "trailers": [
+      {
+        "title": "RAIN HEART — Official Announcement Teaser",
+        "poster": "/assets/case-studies/rain-heart/trailer-1.jpg",
+        "url": "https://store.steampowered.com/app/4397540/?snr=case-study#app_trailer_257278763"
+      }
+    ],
+    "storeUrl": "https://store.steampowered.com/app/4397540/",
+    "source": "https://store.steampowered.com/app/4397540/",
+    "checkedAt": "2026-10-28"
+  },
+  "dark-times": {
+    "cover": "/assets/case-studies/dark-times/cover.jpg",
+    "screenshots": [
+      "/assets/case-studies/dark-times/screenshot-1.jpg",
+      "/assets/case-studies/dark-times/screenshot-2.jpg",
+      "/assets/case-studies/dark-times/screenshot-3.jpg",
+      "/assets/case-studies/dark-times/screenshot-4.jpg",
+      "/assets/case-studies/dark-times/screenshot-5.jpg",
+      "/assets/case-studies/dark-times/screenshot-6.jpg",
+      "/assets/case-studies/dark-times/screenshot-7.jpg",
+      "/assets/case-studies/dark-times/screenshot-8.jpg"
+    ],
+    "trailers": [
+      {
+        "title": "Dark Times - Gameplay Trailer",
+        "poster": "/assets/case-studies/dark-times/trailer-1.jpg",
+        "url": "https://store.steampowered.com/app/3302960/?snr=case-study#app_trailer_257066403"
+      },
+      {
+        "title": "Dark Times - Story Trailer",
+        "poster": "/assets/case-studies/dark-times/trailer-2.jpg",
+        "url": "https://store.steampowered.com/app/3302960/?snr=case-study#app_trailer_257076706"
+      }
+    ],
+    "storeUrl": "https://store.steampowered.com/app/3302960/",
+    "source": "https://store.steampowered.com/app/3302960/",
+    "checkedAt": "2026-10-28"
+  },
+  "cup-or-die": {
+    "cover": "/assets/case-studies/cup-or-die/cover.jpg",
+    "screenshots": [
+      "/assets/case-studies/cup-or-die/screenshot-1.jpg",
+      "/assets/case-studies/cup-or-die/screenshot-2.jpg",
+      "/assets/case-studies/cup-or-die/screenshot-3.jpg",
+      "/assets/case-studies/cup-or-die/screenshot-4.jpg",
+      "/assets/case-studies/cup-or-die/screenshot-5.jpg",
+      "/assets/case-studies/cup-or-die/screenshot-6.jpg",
+      "/assets/case-studies/cup-or-die/screenshot-7.jpg"
+    ],
+    "trailers": [
+      {
+        "title": "Gameplay Trailer",
+        "poster": "/assets/case-studies/cup-or-die/trailer-1.jpg",
+        "url": "https://store.steampowered.com/app/4369890/?snr=case-study#app_trailer_257426975"
+      }
+    ],
+    "storeUrl": "https://store.steampowered.com/app/4369890/",
+    "source": "https://store.steampowered.com/app/4369890/",
+    "checkedAt": "2026-10-28"
+  }
+}

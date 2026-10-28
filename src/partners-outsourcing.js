@@ -18,7 +18,7 @@ function serviceCard(service) {
 }
 
 function workCard(item) {
-  return `<a class="game-card outsourcing-work-card" href="${item.url}" target="_blank" rel="noopener noreferrer"><img loading="lazy" src="${item.image}" alt=""><strong>${escapeHtml(item.title)} ${external}</strong></a>`
+  return `<a class="game-card outsourcing-work-card ${!item.image ? 'case-card--concept' : ''}" href="${item.url}" ${item.internal ? 'data-route' : 'target="_blank" rel="noopener noreferrer"'}>${item.image ? `<img loading="lazy" src="${item.image}" alt="">` : '<span class="case-card__concept">DAY / NIGHT<br>STRATEGY & SURVIVAL</span>'}<strong>${escapeHtml(item.title)} ${external}</strong></a>`
 }
 
 export function outsourcingPage({ header, footer, partnersHref }) {
@@ -34,7 +34,7 @@ export function outsourcingPage({ header, footer, partnersHref }) {
 
     <section class="outsourcing-section outsourcing-capabilities"><header><h2>Our Capabilities</h2><p>Explore the ways we can support your next project.</p></header><div class="outsourcing-service-grid">${services.map(serviceCard).join('')}</div></section>
 
-    <section class="outsourcing-section outsourcing-work"><header><div><h2>Selected Work</h2><p>Explore some of the games, experiences and creative work developed by Flat Reality.</p></div><div class="slider-controls" aria-label="Selected Work controls"><button type="button" data-work-prev aria-label="Previous case study">←</button><button type="button" data-work-next aria-label="Next case study">→</button></div></header><div class="wide-track outsourcing-work-track" data-work-track>${caseStudies.map(workCard).join('')}</div></section>
+    <section class="outsourcing-section outsourcing-work" id="selected-work"><header><div><h2>Selected Work</h2><p>Explore client collaborations and internal studio productions through our case studies.</p></div><div class="slider-controls" aria-label="Selected Work controls"><button type="button" data-work-prev aria-label="Previous case study">←</button><button type="button" data-work-next aria-label="Next case study">→</button></div></header><div class="wide-track outsourcing-work-track" data-work-track>${caseStudies.map(workCard).join('')}</div></section>
 
     <section class="outsourcing-tech" id="technology"><img class="outsourcing-tech__background" loading="lazy" src="/assets/images/PartnersTechnologyBackground.png" alt="Abstract glass shapes representing Flat Reality technology"><div class="outsourcing-tech__copy"><h2>Powered by Technology</h2><h3>Built with the tools we create.</h3><p>Our own technologies can complement custom development and simplify production where they fit your project.</p><a href="${partnersHref('/tech')}" data-route>Explore Technologies ${arrow}</a></div><div class="outsourcing-tech__products"><div class="outsourcing-tech__cards"><article><span><img src="/assets/icons/PhantomUIIcon.png" alt="Phantom UI"></span><b>Phantom UI</b></article><article><span><img src="/assets/icons/FRSDKIcon.png" alt="Flat Reality SDK"></span><b>Flat Reality SDK</b></article></div><div class="outsourcing-tech__support"><b>Need implementation support?</b><button type="button" data-toggle-service="implementation-support">+ Add to Inquiry</button></div></div></section>
 

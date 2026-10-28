@@ -5,6 +5,7 @@ import { initInquiry, inquiryPage } from './partners-inquiry.js'
 import { initRetainerPlus, retainerPlusPage } from './retainer-plus.js'
 import { initRetainerInquiry, retainerInquiryPage } from './retainer-inquiry.js'
 import privacyPolicyText from './privacy-policy-en.txt?raw'
+import { caseStudyPage, findCaseStudy, caseStudyCover, initCaseStudy, portfolioPage } from './case-studies.js'
 
 const A = '/assets'
 const ext = `<span class="ext" aria-hidden="true"><img src="${A}/icons/LinkIcon.png" alt=""></span>`
@@ -267,6 +268,13 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
   else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games/'};document.body.className='theme-studio'}
   else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy/'};document.body.className='theme-privacy'}
   else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio';afterRender=()=>hydrateHomeChannel(false)}
+  if (partnerRoute === '/portfolio') {
+    page=portfolioPage({header,footer}); seo={title:'Case Study | Flat Reality Partners',description:'Explore Flat Reality Partners case studies: game design, Unity development, production and key art for client projects and studio productions.',canonical:'https://flatreality.eu/partners/portfolio/',robots:'index, follow, max-image-preview:large',image:'https://flatreality.eu/assets/images/FlatRealityCover.png'}; document.body.className='theme-partners'; afterRender=undefined
+  }
+  if (partnerRoute?.startsWith('/case-studies/')) {
+    const project = findCaseStudy(partnerRoute.slice('/case-studies/'.length))
+    if (project) { page=caseStudyPage(project,{header,footer}); seo={title:`${project.title} — Case Study | Flat Reality Partners`,description:project.description,canonical:`https://flatreality.eu/partners/case-studies/${project.slug}/`,robots:'noindex, follow',image:`https://flatreality.eu${caseStudyCover(project) || '/assets/images/FlatRealityCover.png'}`}; document.body.className='theme-partners'; afterRender=initCaseStudy }
+  }
   const inquiryRoute=partnerRoute==='/outsourcing/new-inquiry'||partnerRoute==='/outsourcing/retainer-plus/new-inquiry'
   document.querySelector('#app').innerHTML=page;applySeo(seo);if(p!=='/admin'&&!inquiryRoute)bind();const hydration=afterRender?.();if(p!=='/admin'&&!inquiryRoute&&hydration?.then)hydration.then(()=>bind()).catch(()=>{})
   let revealed=false
