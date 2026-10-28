@@ -209,7 +209,8 @@ function renderRoute(route) {
 
 for (const project of caseStudyProjects) routes.push({ path: caseStudyPath(project.slug).replace(/^\/|\/$/g,''), title: `${project.title} — Case Study | Flat Reality Partners`, description: project.description, indexable: false, robots: 'noindex, follow', image: caseStudyCover(project) || defaultImage, body: caseStudyBody(project), schema: { '@context':'https://schema.org', '@type':'Article', headline:`${project.title} — Case Study`, description:project.description, author:{'@type':'Organization',name:'Flat Reality Partners'}, mainEntityOfPage:`${origin}${caseStudyPath(project.slug)}` } })
 
-routes.push({path:'partners/portfolio',title:'Case Study | Flat Reality Partners',description:'Explore game design, Unity development, production and key-art case studies from Flat Reality Partners.',canonical:`${origin}/partners/portfolio/`,indexable:true,image:defaultImage,body:portfolioBody()})
+routes.push({path:'partners/case-studies',title:'Case Study | Flat Reality Partners',description:'Explore game design, Unity development, production and key-art case studies from Flat Reality Partners.',canonical:`${origin}/partners/case-studies/`,indexable:true,image:defaultImage,body:portfolioBody()})
+routes.push({path:'partners/portfolio',title:'Case Study | Flat Reality Partners',description:'Explore the Flat Reality Partners portfolio.',canonical:`${origin}/partners/case-studies/`,robots:'noindex, follow',indexable:false,image:defaultImage,body:portfolioBody()})
 
 for (const route of routes) {
   if (!route.path) {

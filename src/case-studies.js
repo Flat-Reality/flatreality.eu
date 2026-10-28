@@ -10,7 +10,7 @@ export const caseStudyCover = project => media[project.slug]?.cover || ''
 export function caseStudyBody(project) {
   const assets = media[project.slug]
   const next = caseStudyProjects[(caseStudyProjects.indexOf(project) + 1) % caseStudyProjects.length]
-  return `<nav class="case-breadcrumb" aria-label="Breadcrumb"><a href="/partners/portfolio/" data-route>Case Studies</a><span aria-hidden="true">—</span><span aria-current="page">${escape(project.title)}</span></nav>
+  return `<nav class="case-breadcrumb" aria-label="Breadcrumb"><a href="/partners/case-studies/" data-route>Case Studies</a><span aria-hidden="true">—</span><span aria-current="page">${escape(project.title)}</span></nav>
     <article class="case-article">
       <header class="case-hero"><p>${escape(project.discipline)}</p><h1>${escape(project.title)}</h1><h2>${escape(project.headline)}</h2><p class="case-hero__description">${escape(project.description)}</p>${assets ? `<img class="case-hero__image" src="${assets.cover}" alt="${escape(project.title)} official key visual" fetchpriority="high">` : '<div class="case-phase-preview" aria-label="Day and night gameplay structure"><span>DAY<br><b>Build. Prepare.</b></span><span>NIGHT<br><b>Defend. Survive.</b></span></div>'}</header>
       <section class="case-facts" aria-label="Project facts"><dl>${[['Client', project.client], ['Engagement', project.relationship], ['Team', project.team], ['Engine', project.engine], ['Work period', project.period], ['Project status', project.status], ['Platform', project.platform], ['Genre', project.genre]].map(([name,value]) => `<div><dt>${name}</dt><dd>${escape(value)}</dd></div>`).join('')}</dl></section>

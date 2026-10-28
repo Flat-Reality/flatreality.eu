@@ -268,8 +268,9 @@ function render(){document.body.classList.remove('leaving');const p=location.pat
   else if(p==='/games'){page=gamesPage();seo={title:'Games - Flat Reality',description:'Explore expressive games by Flat Reality, including The Nick and RAIN HEART.',canonical:'https://flatreality.eu/games/'};document.body.className='theme-studio'}
   else if(p.startsWith('/privacy')){page=privacy();seo={title:'Privacy Policy - Flat Reality',description:'Privacy, cookies and data rights at Flat Reality.',canonical:'https://flatreality.eu/privacy/'};document.body.className='theme-privacy'}
   else{page=studio();seo={title:'Flat Reality - Games Should Say Something',description:'Flat Reality is an independent European game studio creating expressive games that leave a lasting impression.',canonical:'https://flatreality.eu/'};document.body.className='theme-studio';afterRender=()=>hydrateHomeChannel(false)}
-  if (partnerRoute === '/portfolio') {
-    page=portfolioPage({header,footer}); seo={title:'Case Study | Flat Reality Partners',description:'Explore Flat Reality Partners case studies: game design, Unity development, production and key art for client projects and studio productions.',canonical:'https://flatreality.eu/partners/portfolio/',robots:'index, follow, max-image-preview:large',image:'https://flatreality.eu/assets/images/FlatRealityCover.png'}; document.body.className='theme-partners'; afterRender=undefined
+  if (partnerRoute === '/portfolio' || partnerRoute === '/case-studies') {
+    if (partnerRoute === '/portfolio') history.replaceState({}, '', `/partners/case-studies/${location.search}${location.hash}`)
+    page=portfolioPage({header,footer}); seo={title:'Case Study | Flat Reality Partners',description:'Explore Flat Reality Partners case studies: game design, Unity development, production and key art for client projects and studio productions.',canonical:'https://flatreality.eu/partners/case-studies/',robots:'index, follow, max-image-preview:large',image:'https://flatreality.eu/assets/images/FlatRealityCover.png'}; document.body.className='theme-partners'; afterRender=undefined
   }
   if (partnerRoute?.startsWith('/case-studies/')) {
     const project = findCaseStudy(partnerRoute.slice('/case-studies/'.length))
