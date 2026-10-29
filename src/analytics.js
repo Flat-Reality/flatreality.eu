@@ -100,6 +100,7 @@ export function initAnalytics() {
     if(!consented())return
     const target=event.target.closest('a,button'); if(!target)return
     const d=target.dataset
+    if(d.partnerApply)trackEvent('independent_partner_apply_click',{placement:d.partnerApply})
     const service=d.toggleService||d.toggleRetainer||d.quickOffering
     if(service) trackEvent('partners_offer_toggle',{service_id:service,selection_action:target.classList.contains('selected')||target.getAttribute('aria-pressed')==='true'?'remove':'add'})
     if(d.retainerMode)trackEvent('inquiry_mode_select',{selection:d.retainerMode})

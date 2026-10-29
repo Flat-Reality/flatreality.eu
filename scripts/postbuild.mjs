@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from '../src/lib/supabase-config.js'
 import { caseStudyProjects, caseStudyPath } from '../src/case-studies-data.js'
 import { caseStudyBody, caseStudyCover, portfolioBody } from '../src/case-studies.js'
+import { independentPartnerBody, independentPartnerPath, independentPartnerSeo } from '../src/independent-partner.js'
 
 const origin = 'https://flatreality.eu'
 const pagesDomain = process.env.PAGES_DOMAIN || 'flatreality.eu'
@@ -211,6 +212,8 @@ for (const project of caseStudyProjects) routes.push({ path: caseStudyPath(proje
 
 routes.push({path:'partners/case-studies',title:'Case Study | Flat Reality Partners',description:'Explore game design, Unity development, production and key-art case studies from Flat Reality Partners.',canonical:`${origin}/partners/case-studies/`,indexable:true,image:defaultImage,body:portfolioBody()})
 routes.push({path:'partners/portfolio',title:'Case Study | Flat Reality Partners',description:'Explore the Flat Reality Partners portfolio.',canonical:`${origin}/partners/case-studies/`,robots:'noindex, follow',indexable:false,image:defaultImage,body:portfolioBody()})
+
+routes.push({path:independentPartnerPath.replace(/^\/|\/$/g,''),...independentPartnerSeo,indexable:true,body:independentPartnerBody(),images:[independentPartnerSeo.image]})
 
 for (const route of routes) {
   if (!route.path) {
