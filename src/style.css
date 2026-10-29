@@ -212,6 +212,9 @@ body:before{display:none!important}.mobile-loader{display:none}.ext{display:inli
 .ip-section>header p:last-child{margin-bottom:0}
 .ip-benefit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .ip-benefit-grid article{border:1px solid #ddd;border-radius:16px;padding:30px;display:flex;flex-direction:column;align-items:flex-start}
+.ip-benefit-grid article,.ip-how article{box-shadow:0 4px 14px #0002;transition:transform .45s var(--ease),box-shadow .45s var(--ease)}
+@media(hover:hover) and (pointer:fine){.ip-benefit-grid article:hover,.ip-how article:hover{transform:scale(1.025);box-shadow:0 14px 36px #0004}}
+@media(prefers-reduced-motion:reduce){.ip-benefit-grid article:hover,.ip-how article:hover{transform:none}}
 .ip-benefit-grid svg{width:32px;height:32px;margin-bottom:32px}
 .ip-benefit-grid h3{font-size:26px;line-height:1.1;margin:0 0 18px}
 .ip-benefit-grid p{font-size:17px;margin:0}
