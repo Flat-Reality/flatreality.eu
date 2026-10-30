@@ -314,3 +314,7 @@ body:before{display:none!important}.mobile-loader{display:none}.ext{display:inli
   .retainer-plus .retainer-hero,.retainer-plus .retainer-section,.outsourcing-page .outsourcing-hero,.outsourcing-page .outsourcing-section,.outsourcing-page .outsourcing-tech{opacity:1;transform:none;transition:none}
   .inquiry-step--entering,.inquiry-step--entering .retainer-mode-grid>button,.inquiry-step--entering .inquiry-option,.inquiry-step--entering .retainer-config-item,.retainer-level__popover{animation:none}
 }
+
+/* Equal partner slots keep the remaining marks aligned at every viewport. */
+.partner-intro .logos--partners{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;justify-items:center;width:min(800px,100%);gap:32px}.partner-intro .logos--partners img,.partner-intro .logos--partners img:first-child{width:100%;max-width:160px;height:56px;max-height:56px;object-fit:contain}.partner-intro .logos--partners b{line-height:56px;text-align:center}
+@media(max-width:600px){.partner-intro .logos--partners{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.partner-intro .logos--partners img,.partner-intro .logos--partners img:first-child{max-width:130px;height:44px;max-height:44px}.partner-intro .logos--partners b{line-height:44px}}
