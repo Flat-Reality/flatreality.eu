@@ -318,3 +318,7 @@ body:before{display:none!important}.mobile-loader{display:none}.ext{display:inli
 /* Equal partner slots keep the remaining marks aligned at every viewport. */
 .partner-intro .logos--partners{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;justify-items:center;width:min(800px,100%);gap:32px}.partner-intro .logos--partners img,.partner-intro .logos--partners img:first-child{width:100%;max-width:160px;height:56px;max-height:56px;object-fit:contain}.partner-intro .logos--partners b{line-height:56px;text-align:center}
 @media(max-width:600px){.partner-intro .logos--partners{grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}.partner-intro .logos--partners img,.partner-intro .logos--partners img:first-child{max-width:130px;height:44px;max-height:44px}.partner-intro .logos--partners b{line-height:44px}}
+
+/* RAIN HEART platform marks share the existing platform row. */
+.platforms--rain img{filter:brightness(0)}.game-card:has(.platforms--rain) .coming{top:58px}
+.hero-slide{pointer-events:none}.hero-slide.active{pointer-events:auto}
