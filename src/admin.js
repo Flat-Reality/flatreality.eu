@@ -1,3 +1,4 @@
+import { andyScarlett } from './channel-authors.js'
 import { CHANNEL_ADMIN_ENDPOINT } from './lib/supabase-config.js'
 import { supabase } from './lib/supabase.js'
 
@@ -135,7 +136,17 @@ async function refreshArticles() {
   renderArticleList(articles || [])
 }
 
+function updateAuthorChoice(form) {
+  const showAuthor = form.elements.show_author.checked
+  form.querySelector('[data-author-choice]').hidden = !showAuthor
+  form.elements.author.disabled = !showAuthor
+}
+
 async function loadArticle(article) {
+  const form = document.querySelector('[data-channel-form]')
+  form.elements.show_author.checked = article.content?.author === andyScarlett.id
+  form.elements.author.value = andyScarlett.id
+  updateAuthorChoice(form)
   currentArticle = article
   customSlug = true
   cover = { url: article.cover_url || '', path: article.cover_path || '' }
@@ -157,7 +168,9 @@ function newArticle() {
   currentArticle = null
   customSlug = false
   cover = { url: '', path: '' }
-  document.querySelector('[data-channel-form]').reset()
+  const form = document.querySelector('[data-channel-form]')
+  form.reset()
+  updateAuthorChoice(form)
   document.querySelector('[name=website]').checked = true
   document.querySelector('[name=published_at]').value = localDateValue()
   document.querySelector('[data-cover-preview]').innerHTML = '<span>Cover image</span>'
@@ -175,6 +188,8 @@ async function saveArticle(status) {
   showNotice(status === 'draft' ? 'Saving draft…' : scheduled ? 'Scheduling…' : 'Publishing…')
   try {
     const content = await editor.save()
+    delete content.author
+    if (form.elements.show_author.checked) content.author = form.elements.author.value
     const excerpt = plainText(content).slice(0, 320) || (status === 'draft' ? 'Draft in progress.' : '')
     if (!excerpt) throw new Error('Write at least one paragraph before publishing.')
     const delivery = ['website']
@@ -203,6 +218,8 @@ async function openWorkspace() {
   await createEditor()
   await refreshArticles()
   const form = document.querySelector('[data-channel-form]')
+  updateAuthorChoice(form)
+  form.elements.show_author.addEventListener('change', () => updateAuthorChoice(form))
   const title = form.elements.title
   const slug = form.elements.slug
   const publicationDate = form.elements.published_at

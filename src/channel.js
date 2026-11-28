@@ -1,3 +1,4 @@
+import { channelByline } from './channel-authors.js'
 import DOMPurify from 'dompurify'
 import { supabase } from './lib/supabase.js'
 
@@ -119,7 +120,7 @@ export async function hydrateArticle(slug, applySeo) {
     const category = channelCategories[article.category]?.label || 'Studio'
     const canonical = `https://flatreality.eu/channel/${article.slug}/`
     const image = article.cover_url || 'https://flatreality.eu/assets/images/FlatRealityCover.png'
-    target.innerHTML = `<article class="channel-article" itemscope itemtype="https://schema.org/NewsArticle"><nav aria-label="Breadcrumb"><a href="/channel/" data-route>FR Channel</a><span>•</span><span>${escapeHtml(category)}</span><span>•</span><span>${escapeHtml(article.title)}</span></nav><header><p>${escapeHtml(category)}</p><h1 itemprop="headline">${escapeHtml(article.title)}</h1><p itemprop="description">${escapeHtml(article.excerpt || '')}</p><time itemprop="datePublished" datetime="${escapeHtml(article.published_at)}">${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time></header>${article.cover_url ? `<img itemprop="image" class="channel-article__cover" src="${escapeHtml(article.cover_url)}" alt="${escapeHtml(`${article.title} cover image`)}" fetchpriority="high" decoding="async">` : ''}<div class="channel-article__body" itemprop="articleBody">${renderArticleBlocks(article.content)}</div></article>`
+    target.innerHTML = `<article class="channel-article" itemscope itemtype="https://schema.org/NewsArticle"><nav aria-label="Breadcrumb"><a href="/channel/" data-route>FR Channel</a><span>•</span><span>${escapeHtml(category)}</span><span>•</span><span>${escapeHtml(article.title)}</span></nav><header><p>${escapeHtml(category)}</p><h1 itemprop="headline">${escapeHtml(article.title)}</h1><p itemprop="description">${escapeHtml(article.excerpt || '')}</p><time itemprop="datePublished" datetime="${escapeHtml(article.published_at)}">${new Date(article.published_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</time>${channelByline(article)}</header>${article.cover_url ? `<img itemprop="image" class="channel-article__cover" src="${escapeHtml(article.cover_url)}" alt="${escapeHtml(`${article.title} cover image`)}" fetchpriority="high" decoding="async">` : ''}<div class="channel-article__body" itemprop="articleBody">${renderArticleBlocks(article.content)}</div></article>`
     applySeo({
       title: `${article.title} | FR Channel`, description: article.excerpt, canonical, image, imageAlt: `${article.title} cover image`, type: 'article',
       structuredData: [

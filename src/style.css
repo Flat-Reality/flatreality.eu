@@ -322,3 +322,30 @@ body:before{display:none!important}.mobile-loader{display:none}.ext{display:inli
 /* RAIN HEART platform marks share the existing platform row. */
 .platforms--rain img{filter:brightness(0)}.game-card:has(.platforms--rain) .coming{top:58px}
 .hero-slide{pointer-events:none}.hero-slide.active{pointer-events:auto}
+
+.admin-author-toggle {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+}
+.admin-fields .admin-author-toggle input {
+  width: auto;
+  min-height: 0;
+  accent-color: #6500ff;
+}
+.admin-author [hidden] { display: none !important; }
+.channel-byline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 20px;
+  font-weight: 700;
+}
+.channel-byline img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: 48% 43%;
+}
+.seo-prerender .channel-byline img { height: 36px; }

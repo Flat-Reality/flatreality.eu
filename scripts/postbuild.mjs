@@ -1,3 +1,4 @@
+import { channelByline } from '../src/channel-authors.js'
 import { services } from '../src/partners-outsourcing-data.js'
 import { publicContent } from './public-content.mjs'
 import { healthcareBody, healthcareSeo } from '../src/rainheart-healthcare.js'
@@ -141,7 +142,7 @@ function articleSchema(article) {
 function articleBody(article) {
   const category = categoryName(article)
   const cover = absoluteUrl(article.cover_url)
-  return `<main><nav aria-label="Breadcrumb"><a href="/channel/">FR Channel</a><span aria-hidden="true"> • </span><span>${escapeHtml(category)}</span><span aria-hidden="true"> • </span><span>${escapeHtml(article.title)}</span></nav><article itemscope itemtype="https://schema.org/NewsArticle"><header><p>${escapeHtml(category)}</p><h1 itemprop="headline">${escapeHtml(article.title)}</h1><p itemprop="description">${escapeHtml(article.excerpt)}</p><p>By <span itemprop="author">Flat Reality</span> · <time itemprop="datePublished" datetime="${escapeHtml(publishedDate(article))}">${escapeHtml(new Date(publishedDate(article)).toLocaleDateString('en-GB', { dateStyle: 'long', timeZone: 'UTC' }))}</time></p>${cover ? `<figure><img itemprop="image" src="${escapeHtml(cover)}" alt="${escapeHtml(`${article.title} cover image`)}" fetchpriority="high" decoding="async"></figure>` : ''}</header><div itemprop="articleBody">${renderBlocks(article)}</div></article></main>`
+  return `<main><nav aria-label="Breadcrumb"><a href="/channel/">FR Channel</a><span aria-hidden="true"> • </span><span>${escapeHtml(category)}</span><span aria-hidden="true"> • </span><span>${escapeHtml(article.title)}</span></nav><article itemscope itemtype="https://schema.org/NewsArticle"><header><p>${escapeHtml(category)}</p><h1 itemprop="headline">${escapeHtml(article.title)}</h1><p itemprop="description">${escapeHtml(article.excerpt)}</p><p><time itemprop="datePublished" datetime="${escapeHtml(publishedDate(article))}">${escapeHtml(new Date(publishedDate(article)).toLocaleDateString('en-GB', { dateStyle: 'long', timeZone: 'UTC' }))}</time></p>${channelByline(article)}${cover ? `<figure><img itemprop="image" src="${escapeHtml(cover)}" alt="${escapeHtml(`${article.title} cover image`)}" fetchpriority="high" decoding="async"></figure>` : ''}</header><div itemprop="articleBody">${renderBlocks(article)}</div></article></main>`
 }
 
 async function getPublishedArticles() {
